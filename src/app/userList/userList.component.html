@@ -1,0 +1,10 @@
+<div class="user-list-container">
+    <h2>User List</h2>
+    <ul class="user-list">
+        <li *ngFor="let user of users" class="user-item">
+            {{ user.username }}
+            <span class="status-indicator" [ngClass]="{'online': user.isOnline, 'offline': !user.isOnline}"></span>
+            <button (click)="startChat(user.id)">Chat</button>
+        </li>
+    </ul>
+</div>
