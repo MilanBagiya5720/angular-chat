@@ -1,1 +1,8 @@
+<nav>
+    <a routerLink="/login" routerLinkActive="active">Login</a>
+    <a routerLink="/register" routerLinkActive="active">Register</a>
+    <a routerLink="/chat" routerLinkActive="active" *ngIf="isLoggedIn()">Chat</a>
+    <a routerLink="/users" routerLinkActive="active" *ngIf="isLoggedIn()">Users</a>
+    <a (click)="logout()" *ngIf="isLoggedIn()">Logout</a>
+</nav>
 <router-outlet></router-outlet>

@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../auth.service';
-import { UserService } from '../user.service';
-import { Subscription, fromEvent } from 'rxjs';
-import { Socket, io } from 'socket.io-client';
-import { SocketService } from '../socket.service';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../services/auth.service';
+import { SocketService } from '../services/socket.service';
+import { UserService } from '../services/user.service';
 
 @Component({
-  selector: 'app-userList',
-  templateUrl: './userList.component.html',
-  styleUrls: ['./userList.component.css'],
+  selector: 'app-user-list',
+  templateUrl: './user-list.component.html',
+  styleUrls: ['./user-list.component.css'],
 })
 export class UserListComponent {
   users: any[] = [];
@@ -49,8 +48,7 @@ export class UserListComponent {
   }
 
   startChat(receiverId: number): void {
-    debugger
-    this.authService.setRecieverId(receiverId);
+    this.authService.setReceiverId(receiverId);
     this.router.navigateByUrl('/chat');
   }
 

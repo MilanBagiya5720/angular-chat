@@ -1,17 +1,18 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { io, Socket } from 'socket.io-client';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { io, Socket } from 'socket.io-client';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatService {
   private socket: Socket;
-  private apiUrl = 'http://localhost:3005/api/chat'; // Change the port if your server is running on a different port
+  private apiUrl = environment.localUrl + '/api/chat'; // Change the port if your server is running on a different port
 
   constructor(private http: HttpClient) {
-    this.socket = io('http://localhost:3005'); // Change the port if your server is running on a different port
+    this.socket = io(environment.localUrl); // Change the port if your server is running on a different port
   }
 
   joinRoom(senderId: number, receiverId: number) {
@@ -20,7 +21,6 @@ export class ChatService {
 
   sendMessage(message: any) {
     this.socket.emit('sendMessage', message);
-    // return this.http.post(`${this.apiUrl}/sendMessage`, message);
   }
 
   receiveMessage(): Observable<any> {

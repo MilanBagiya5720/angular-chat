@@ -3,6 +3,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -14,11 +16,15 @@ export class LoginComponent {
   password: string = '';
   errorMessage: string = '';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   onSubmit(): void {
     this.http
-      .post<any>('http://localhost:3005/api/users/login', {
+      .post<any>(environment.localUrl + '/api/users/login', {
         username: this.username,
         password: this.password,
       })
@@ -27,6 +33,7 @@ export class LoginComponent {
           if (response.auth && response.token) {
             localStorage.setItem('token', response.token);
             localStorage.setItem('currentUser', JSON.stringify(response.user));
+            this.authService.setUserId(response.user.id);
             this.router.navigate(['/users']);
           } else {
             this.errorMessage = 'Invalid username or password';

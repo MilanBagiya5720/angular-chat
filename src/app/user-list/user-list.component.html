@@ -1,0 +1,25 @@
+<!-- <div class="user-list-container">
+    <h2>User List</h2>
+    <ul class="user-list">
+        <li *ngFor="let user of users" class="user-item">
+            {{ user.username }}
+            <span class="status-indicator" [ngClass]="{'online': user.isOnline, 'offline': !user.isOnline}"></span>
+            <button (click)="startChat(user.id)">Chat</button>
+        </li>
+    </ul>
+</div>
+ -->
+
+<!-- src/app/users-list/users-list.component.html -->
+<div class="users-list-container">
+    <div class="users-list-box">
+        <h2>Users</h2>
+        <ul>
+
+            <li *ngFor="let user of users" [class.online]="user.isOnline" (click)="startChat(user.id)">
+                {{ user.username }}
+                <span class="status" [class.online]="user.isOnline"></span>
+            </li>
+        </ul>
+    </div>
+</div>

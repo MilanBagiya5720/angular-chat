@@ -1,4 +1,4 @@
-<div class="chat-container">
+<!-- <div class="chat-container">
     <div class="chat-header">
         <h2>Chat</h2>
     </div>
@@ -14,5 +14,30 @@
     <div *ngIf="receiverId !== null" class="chat-footer">
         <input [(ngModel)]="message" placeholder="Enter your message">
         <button (click)="sendMessage()">Send</button>
+    </div>
+</div> -->
+
+<!-- src/app/chat/chat.component.html -->
+<!-- src/app/chat/chat.component.html -->
+<div class="chat-container">
+    <div class="chat-main">
+        <div class="chat-header">
+            <h2>Chat</h2>
+            <button (click)="logout()">Logout</button>
+        </div>
+        <div class="chat-messages" #scrollContainer>
+            <div *ngFor="let message of messages" [class.self]="message.senderId === userId"
+                class="message-container">
+                <img [src]="getUserAvatar(message.senderId)" class="avatar" />
+                <div class="message">
+                    <span class="message-content">{{ message.text }}</span>
+                    <span class="message-time">{{ formatTime(message.timestamp) }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="chat-input">
+            <input [(ngModel)]="message" (keyup.enter)="sendMessage()" placeholder="Type a message..." />
+            <button (click)="sendMessage()">Send</button>
+        </div>
     </div>
 </div>

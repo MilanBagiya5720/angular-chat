@@ -1,29 +1,22 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ChatService } from '../services/chat.service';
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { Subscription } from 'rxjs';
 import { SocketService } from '../services/socket.service';
 
 @Component({
-  selector: 'app-chat',
-  templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.css'],
+  selector: 'app-chatbox',
+  templateUrl: './chatbox.component.html',
+  styleUrls: ['./chatbox.component.css'],
 })
-export class ChatComponent implements OnInit, OnDestroy {
+export class ChatBoxComponent implements OnInit, OnDestroy {
   message = '';
   messages: any[] = [];
   userId: number | null = null;
   receiverId: number | null = null;
 
   private socketSubscription: Subscription;
-  @ViewChild('scrollContainer') private scrollContainer: ElementRef;
 
   constructor(
     private chatService: ChatService,
@@ -33,20 +26,19 @@ export class ChatComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.userId = this.authService.getUserId();
-    this.receiverId = this.authService.getRecieverId();
-
     this.socketSubscription = this.socketService
       .on('new-message')
       .subscribe((message: any) => {
         this.messages.push(message);
       });
 
+    this.userId = this.authService.getUserId();
     if (this.userId && !this.socketService.isConnected()) {
       this.socketService.connect();
       this.socketService.emit('register-user-id', this.userId);
     }
 
+    this.receiverId = this.authService.getRecieverId();
     if (this.userId === null) {
       this.router.navigate(['/login']);
       return;
@@ -57,14 +49,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
 
     this.joinChat();
-  }
-
-  getUserAvatar(userId: number): string {
-    if (userId === this.userId) {
-      return '/assets/self.jpg';
-    } else {
-      return `/assets/avtar.jpg`;
-    }
   }
 
   ngOnDestroy(): void {
@@ -102,10 +86,5 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authService.logout();
-  }
-
-  formatTime(timestamp?: string): string {
-    const date = timestamp ? new Date(timestamp) : new Date();
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 }

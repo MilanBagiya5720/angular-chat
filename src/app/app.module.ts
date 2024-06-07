@@ -6,10 +6,11 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChatComponent } from './chat/chat.component';
+import { ChatBoxComponent } from './chatbox/chatbox.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { UserListComponent } from './userList/userList.component';
+import { UserListComponent } from './user-list/user-list.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { UserListComponent } from './userList/userList.component';
     ChatComponent,
     RegisterComponent,
     DashboardComponent,
+    ChatBoxComponent,
     UserListComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],

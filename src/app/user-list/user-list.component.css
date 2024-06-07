@@ -1,0 +1,60 @@
+/* src/app/users-list/users-list.component.css */
+.users-list-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f0f2f5;
+}
+
+.users-list-box {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.users-list-box h2 {
+  margin-bottom: 1.5rem;
+}
+
+.users-list-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.users-list-box li {
+  padding: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.users-list-box li.online {
+  background: #e0ffe0;
+}
+
+.users-list-box li:hover {
+  background: #f0f0f0;
+}
+
+.status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ccc;
+}
+
+.online {
+  background: #28a745;
+}
+
+.online-indicator {
+  color: #28a745;
+  font-weight: bold;
+}

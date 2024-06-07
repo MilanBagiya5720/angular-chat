@@ -3,6 +3,7 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-register',
@@ -19,7 +20,7 @@ export class RegisterComponent {
 
   onSubmit(): void {
     this.http
-      .post<any>('http://localhost:3005/api/users/register', {
+      .post<any>(environment.localUrl + '/api/users/register', {
         username: this.username,
         password: this.password,
       })

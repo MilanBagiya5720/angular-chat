@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../auth.service';
-import { SocketService } from '../socket.service';
-import { UserService } from '../user.service';
+import { AuthService } from '../services/auth.service';
+import { SocketService } from '../services/socket.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -90,7 +90,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   selectUser(user: any): void {
-    this.authService.setRecieverId(user.id);
+    this.authService.setReceiverId(user.id);
     console.log('User selected:', user);
   }
 

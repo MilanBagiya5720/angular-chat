@@ -1,39 +1,50 @@
-// src/app/services/socket.service.ts
-
-import { Injectable } from '@angular/core';
-import { io, Socket } from 'socket.io-client';
-import { fromEvent, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { io, Socket } from 'socket.io-client';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SocketService {
   private socket: Socket;
-  private apiUrl = 'http://localhost:3005/api'; // Adjust the URL as necessary
+  private apiUrl = environment.localUrl + '/api'; // Adjust the URL as necessary
 
   constructor(private http: HttpClient) {
-    this.socket = io('http://localhost:3005'); // Adjust the URL as necessary
+    this.socket = io(environment.localUrl); // Adjust the URL as necessary
   }
 
+  // Socket events
   emit(event: string, data?: any): void {
     this.socket.emit(event, data);
   }
 
   on(event: string): Observable<any> {
-    return fromEvent(this.socket, event);
-  }
-
-  disconnect(): void {
-    this.socket.disconnect();
+    return new Observable<any>((observer) => {
+      this.socket.on(event, (data) => observer.next(data));
+    });
   }
 
   connect(): void {
-    this.socket.connect();
+    if (!this.socket.connected) {
+      this.socket.connect();
+    }
+  }
+
+  disconnect(): void {
+    if (this.socket.connected) {
+      this.socket.disconnect();
+    }
   }
 
   isConnected(): boolean {
     return this.socket.connected;
+  }
+
+  // Custom methods for application-specific functionality
+  registerUserId(userId: number): void {
+    this.socket.emit('register-user-id', userId);
   }
 
   sendMessageRequest(senderId: number, receiverId: number): Observable<any> {
@@ -52,6 +63,12 @@ export class SocketService {
       senderId,
       receiverId,
       accept,
+    });
+  }
+
+  getOnlineUsers(): Observable<any> {
+    return new Observable<any>((observer) => {
+      this.socket.on('online-users', (users) => observer.next(users));
     });
   }
 
