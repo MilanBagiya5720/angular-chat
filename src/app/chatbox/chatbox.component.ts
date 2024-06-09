@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ChatService } from '../services/chat.service';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../services/auth.service';
+import { ChatService } from '../services/chat.service';
 import { SocketService } from '../services/socket.service';
 
 @Component({
@@ -44,7 +44,7 @@ export class ChatBoxComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.chatService.receiveMessage().subscribe((message) => {
+    this.socketService.receiveMessage().subscribe((message) => {
       this.messages.push(message);
     });
 
@@ -59,7 +59,7 @@ export class ChatBoxComponent implements OnInit, OnDestroy {
 
   joinChat(): void {
     if (this.receiverId !== null) {
-      this.chatService.joinRoom(this.userId!, this.receiverId);
+      this.socketService.joinRoom(this.userId!, this.receiverId);
       this.chatService
         .getMessages(this.userId!, this.receiverId)
         .subscribe((messages) => {
@@ -79,7 +79,7 @@ export class ChatBoxComponent implements OnInit, OnDestroy {
         receiverId: this.receiverId,
         text: this.message,
       };
-      this.chatService.sendMessage(message);
+      this.socketService.sendMessage(message);
       this.message = '';
     }
   }

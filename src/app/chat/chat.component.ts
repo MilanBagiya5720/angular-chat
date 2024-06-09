@@ -46,7 +46,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.chatService.receiveMessage().subscribe((message) => {
+    this.socketService.receiveMessage().subscribe((message) => {
       this.messages.push(message);
     });
 
@@ -69,7 +69,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   joinChat(): void {
     if (this.receiverId !== null) {
-      this.chatService.joinRoom(this.userId!, this.receiverId);
+      this.socketService.joinRoom(this.userId!, this.receiverId);
       this.chatService
         .getMessages(this.userId!, this.receiverId)
         .subscribe((messages) => {
@@ -89,7 +89,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         receiverId: this.receiverId,
         text: this.message,
       };
-      this.chatService.sendMessage(message);
+      this.socketService.sendMessage(message);
       this.message = '';
     }
   }

@@ -42,9 +42,16 @@ export class SocketService {
     return this.socket.connected;
   }
 
-  // Custom methods for application-specific functionality
   registerUserId(userId: number): void {
     this.socket.emit('register-user-id', userId);
+  }
+
+  joinRoom(senderId: number, receiverId: number) {
+    this.socket.emit('joinRoom', { senderId, receiverId });
+  }
+
+  sendMessage(message: any) {
+    this.socket.emit('sendMessage', message);
   }
 
   sendMessageRequest(senderId: number, receiverId: number): void {
@@ -83,6 +90,14 @@ export class SocketService {
   getMessageRequestReceived(): Observable<any> {
     return new Observable<any>((observer) => {
       this.socket.on('message-request-received', (data) => observer.next(data));
+    });
+  }
+
+  receiveMessage(): Observable<any> {
+    return new Observable((observer) => {
+      this.socket.on('receiveMessage', (message) => {
+        observer.next(message);
+      });
     });
   }
 }

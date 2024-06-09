@@ -7,7 +7,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChatComponent } from './chat/chat.component';
 import { ChatBoxComponent } from './chatbox/chatbox.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { UserListComponent } from './user-list/user-list.component';
@@ -18,7 +17,6 @@ import { UserListComponent } from './user-list/user-list.component';
     LoginComponent,
     ChatComponent,
     RegisterComponent,
-    DashboardComponent,
     ChatBoxComponent,
     UserListComponent,
   ],
