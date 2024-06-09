@@ -1,0 +1,5 @@
+<div *ngIf="user.id !== currentUserId" (click)="startChat()" [class.online]="user.isOnline">
+    <span class="user-name">{{ user.username }}</span>
+    <span class="status" [class.online]="user.isOnline"></span>
+    <button class="btn" (click)="sendRequest()">Send Request</button>
+</div>

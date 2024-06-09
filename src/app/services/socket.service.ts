@@ -47,8 +47,8 @@ export class SocketService {
     this.socket.emit('register-user-id', userId);
   }
 
-  sendMessageRequest(senderId: number, receiverId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/send-message-request`, {
+  sendMessageRequest(senderId: number, receiverId: number): void {
+    this.socket.emit('send-message-request', {
       senderId,
       receiverId,
     });
@@ -78,5 +78,11 @@ export class SocketService {
 
   getMessages(senderId: number, receiverId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/messages/${senderId}/${receiverId}`);
+  }
+
+  getMessageRequestReceived(): Observable<any> {
+    return new Observable<any>((observer) => {
+      this.socket.on('message-request-received', (data) => observer.next(data));
+    });
   }
 }

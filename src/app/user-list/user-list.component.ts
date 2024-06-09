@@ -12,24 +12,28 @@ import { UserService } from '../services/user.service';
 })
 export class UserListComponent {
   users: any[] = [];
+  userId: number | null = null;
   private socketSubscription: Subscription;
+  request: any;
 
   constructor(
     private userService: UserService,
     private authService: AuthService,
     private socketService: SocketService,
     private router: Router
-  ) {}
+  ) {
+    this.userId = this.authService.getUserId();
+  }
 
   ngOnInit(): void {
-    this.userService.getAllUsers().subscribe(
-      (data: any) => {
+    this.userService.getAllUsers().subscribe({
+      next: (data: any) => {
         this.users = data.users;
       },
-      (error) => {
+      error: (error) => {
         console.error('Failed to load users', error);
-      }
-    );
+      },
+    });
 
     this.socketSubscription = this.socketService
       .on('update-user-status')
@@ -40,6 +44,10 @@ export class UserListComponent {
         }
       });
 
+    this.socketService.getMessageRequestReceived().subscribe((message) => {
+      this.request.push(message);
+    });
+
     // Register the user ID with the socket connection
     const userId = this.authService.getUserId();
     if (userId) {
@@ -47,8 +55,8 @@ export class UserListComponent {
     }
   }
 
-  startChat(receiverId: number): void {
-    this.authService.setReceiverId(receiverId);
+  startChat(receiverId: any): void {
+    this.authService.setReceiverId(receiverId.id);
     this.router.navigateByUrl('/chat');
   }
 
@@ -58,8 +66,9 @@ export class UserListComponent {
     }
   }
 
-  sendMessageRequest(receiverId: number): void {
-    const senderId = this.authService.getUserId();
-    this.socketService.emit('send-message-request', { senderId, receiverId });
+  sendRequest(receiverId: number): void {
+    if (this.userId && receiverId) {
+      this.socketService.sendMessageRequest(this.userId, receiverId);
+    }
   }
 }

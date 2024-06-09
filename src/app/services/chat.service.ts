@@ -39,4 +39,8 @@ export class ChatService {
       },
     });
   }
+
+  getLastMessage(userId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${userId}/last-message`);
+  }
 }
