@@ -9,20 +9,21 @@ import { environment } from 'src/environments/environment';
 })
 export class SocketService {
   private socket: Socket;
-  private apiUrl = environment.localUrl + '/api'; // Adjust the URL as necessary
+  private apiUrl = `${environment.localUrl}/api`; // Use template literals for string interpolation
 
   constructor(private http: HttpClient) {
-    this.socket = io(environment.localUrl); // Adjust the URL as necessary
+    this.socket = io(environment.localUrl);
   }
 
   // Socket events
+
   emit(event: string, data?: any): void {
     this.socket.emit(event, data);
   }
 
-  on(event: string): Observable<any> {
-    return new Observable<any>((observer) => {
-      this.socket.on(event, (data) => observer.next(data));
+  on<T>(event: string): Observable<T> {
+    return new Observable<T>((observer) => {
+      this.socket.on(event, (data: T) => observer.next(data));
     });
   }
 
@@ -43,61 +44,42 @@ export class SocketService {
   }
 
   registerUserId(userId: number): void {
-    this.socket.emit('register-user-id', userId);
+    this.emit('register-user-id', userId);
   }
 
-  joinRoom(senderId: number, receiverId: number) {
-    this.socket.emit('joinRoom', { senderId, receiverId });
+  joinRoom(senderId: number, receiverId: number): void {
+    this.emit('joinRoom', { senderId, receiverId });
   }
 
-  sendMessage(message: any) {
-    this.socket.emit('sendMessage', message);
-  }
-
-  sendMessageRequest(senderId: number, receiverId: number): void {
-    this.socket.emit('send-message-request', {
-      senderId,
-      receiverId,
-    });
-  }
-
-  respondMessageRequest(
-    senderId: number,
-    receiverId: number,
-    accept: boolean
-  ): Observable<any> {
-    return this.http.post(`${this.apiUrl}/respond-message-request`, {
-      senderId,
-      receiverId,
-      accept,
-    });
+  sendMessage(message: any): void {
+    this.emit('sendMessage', message);
   }
 
   getOnlineUsers(): Observable<any> {
-    return new Observable<any>((observer) => {
-      this.socket.on('online-users', (users) => observer.next(users));
-    });
+    return this.on<any>('online-users');
   }
 
   markMessagesAsRead(senderId: number, receiverId: number): void {
     this.emit('mark-messages-read', { senderId, receiverId });
   }
 
-  getMessages(senderId: number, receiverId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/messages/${senderId}/${receiverId}`);
-  }
-
-  getMessageRequestReceived(): Observable<any> {
-    return new Observable<any>((observer) => {
-      this.socket.on('message-request-received', (data) => observer.next(data));
-    });
-  }
-
   receiveMessage(): Observable<any> {
-    return new Observable((observer) => {
-      this.socket.on('receiveMessage', (message) => {
-        observer.next(message);
-      });
-    });
+    return this.on<any>('receiveMessage');
+  }
+
+  sendMessageRequest(
+    senderId: number,
+    receiverId: number,
+    message: string
+  ): void {
+    this.emit('send-message-request', { senderId, receiverId, message });
+  }
+
+  receiveRequest(): Observable<any> {
+    return this.on<any>('receive-message-request');
+  }
+
+  respondMessageRequest(senderId, receiverId, accept) {
+    this.emit('respond-message-request', { senderId, receiverId, accept });
   }
 }

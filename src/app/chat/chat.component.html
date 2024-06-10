@@ -1,22 +1,3 @@
-<!-- <div class="chat-container">
-    <div class="chat-header">
-        <h2>Chat</h2>
-    </div>
-    <div class="chat-body">
-        <div *ngIf="receiverId !== null" class="messages-container">
-            <div *ngFor="let message of messages" class="message"
-                [ngClass]="{'sent':  message.senderId === userId, 'received':  message.senderId !== userId}">
-                <p class="message-text"><strong>{{ message.senderId }}:</strong>
-                    {{ message.text }}</p>
-            </div>
-        </div>
-    </div>
-    <div *ngIf="receiverId !== null" class="chat-footer">
-        <input [(ngModel)]="message" placeholder="Enter your message">
-        <button (click)="sendMessage()">Send</button>
-    </div>
-</div> -->
-
 <div class="chat-container">
     <div class="chat-main">
         <div class="chat-header">

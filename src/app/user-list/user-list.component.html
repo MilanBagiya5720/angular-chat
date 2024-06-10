@@ -1,12 +1,49 @@
-<div class="users-list-container">
-    <div class="users-list-box">
-        <h2>Users</h2>
-        <ul>
-            <li *ngFor="let user of users" [class.online]="user.isOnline" (click)="startChat(user)">
-                <span class="user-name">{{ user.username }}</span>
-                <span class="status" [class.online]="user.isOnline"></span>
-                <button class="btn" (click)="sendRequest(user.id)">Send Request</button>
-            </li>
-        </ul>
+<div class="container">
+  <div class="message-requests">
+    <h2>Message Requests</h2>
+    <div *ngFor="let request of messageRequests">
+      <div class="request-item">
+        <span class="request-username"
+          >You have a new message request from:  {{
+            request.senderId
+          }}</span
+        >
+        <div class="request-actions">
+          <button
+            (click)="respondMessageRequest(request.senderId, true)"
+            class="accept-button"
+          >
+            Accept
+          </button>
+          <button
+            (click)="respondMessageRequest(request.senderId, false)"
+            class="decline-button"
+          >
+            Decline
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div class="users-list">
+    <h2>Users</h2>
+    <div *ngFor="let user of users" class="user-item">
+      <div class="user-info">
+        <span class="username">{{ user.username }}</span>
+        <span
+          class="status"
+          [ngClass]="{ online: user.isOnline, offline: !user.isOnline }"
+        ></span>
+      </div>
+      <div>
+        <button (click)="sendMessageRequest(user)" class="send-request-button">
+          Send Request
+        </button>
+        <button (click)="startChat(user)" class="send-request-button">
+          Chat
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

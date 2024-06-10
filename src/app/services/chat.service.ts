@@ -7,12 +7,12 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ChatService {
-  private apiUrl = environment.localUrl + '/api/chat';
+  private apiUrl = environment.localUrl + '/api';
 
   constructor(private http: HttpClient) {}
 
   getMessages(userId1: number, userId2: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/messages`, {
+    return this.http.get<any[]>(`${this.apiUrl}/chat/messages`, {
       params: {
         userId1: userId1.toString(),
         userId2: userId2.toString(),
@@ -20,7 +20,25 @@ export class ChatService {
     });
   }
 
+  getMessageRequest(receiverId: number): Observable<any> {
+    return this.http.get(
+      `${this.apiUrl}/message-requests/requests/${receiverId}`
+    );
+  }
+
   getLastMessage(userId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${userId}/last-message`);
+    return this.http.get(`${this.apiUrl}/chat/${userId}/last-message`);
+  }
+
+  respondMessageRequest(
+    senderId: number,
+    receiverId: number,
+    accept: boolean
+  ): Observable<any> {
+    return this.http.post(`${this.apiUrl}/respond-message-request`, {
+      senderId,
+      receiverId,
+      accept,
+    });
   }
 }

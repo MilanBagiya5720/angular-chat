@@ -1,12 +1,10 @@
 import {
   Component,
   ElementRef,
-  OnDestroy,
   OnInit,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { ChatService } from '../services/chat.service';
 import { SocketService } from '../services/socket.service';
@@ -16,13 +14,12 @@ import { SocketService } from '../services/socket.service';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
-export class ChatComponent implements OnInit, OnDestroy {
+export class ChatComponent implements OnInit {
   message = '';
   messages: any[] = [];
   userId: number | null = null;
   receiverId: number | null = null;
 
-  private socketSubscription: Subscription;
   @ViewChild('scrollContainer') private scrollContainer: ElementRef;
 
   constructor(
@@ -58,12 +55,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       return '/assets/self.jpg';
     } else {
       return `/assets/avtar.jpg`;
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.socketSubscription) {
-      this.socketSubscription.unsubscribe();
     }
   }
 
