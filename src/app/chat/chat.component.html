@@ -13,7 +13,7 @@
         <img [src]="getUserAvatar(message.senderId)" class="avatar" />
         <div class="message">
           <span class="message-content">{{ message.text }}</span>
-          <span class="message-time">{{ formatTime(message.timestamp) }}</span>
+          <span class="message-time">{{ formatTime(message.messageCreatedAt) }}</span>
           <button (click)="markAsRead()" *ngIf="message.senderId !== userId">Mark As Read</button>
         </div>
       </div>

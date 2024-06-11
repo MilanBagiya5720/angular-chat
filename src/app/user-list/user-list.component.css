@@ -27,6 +27,14 @@ h2 {
   padding: 15px 0;
   border-bottom: 1px solid #e0e0e0;
   transition: background-color 0.3s;
+
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+
+  background: white;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 10px;
 }
 
 .request-item:hover,
@@ -39,7 +47,6 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
 
   position: relative;
 }
@@ -75,14 +82,14 @@ h2 {
   background-color: #4caf50;
   position: absolute;
   top: 28px;
-  left: 30px;
+  left: 20px;
 }
 
 .offline {
   background-color: #f44336;
   position: absolute;
   top: 28px;
-  left: 30px;
+  left: 20px;
 }
 
 .send-request-button,
@@ -159,7 +166,8 @@ h2 {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin: 0 10px;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
 }
 
 .chat-messages .message {
@@ -175,4 +183,10 @@ h2 {
 
 .chat-messages .self .message {
   background: #dcf8c6;
+}
+
+.chat-design {
+  display: flex;
+  align-items: center;
+  gap: 22px;
 }

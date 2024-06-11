@@ -37,7 +37,6 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   getUnreadMessages(): void {
-  
   }
 
   getUsersList(): void {

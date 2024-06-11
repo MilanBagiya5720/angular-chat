@@ -38,7 +38,7 @@ export class ChatComponent implements OnInit {
 
   getUnreadMessages(): void {
     this.socketService.messagesRead().subscribe((message) => {
-      if (message.receiverId === this.receiverId && message.isRead === false) {
+      if (message.receiverId === this.receiverId && message.isSeen === false) {
         this.markAsRead();
       }
     });
@@ -91,6 +91,11 @@ export class ChatComponent implements OnInit {
         senderId: this.userId,
         receiverId: this.receiverId,
         text: this.message,
+        isSeen: false,
+        sender: 'self',
+        receiver: 'receiver',
+        type: 'text',
+        videoThumbnail: 'videoThumbnail',
       };
       this.socketService.sendMessage(message);
       this.message = '';

@@ -2,31 +2,14 @@
   <div class="message-requests">
     <h2>Message Requests</h2>
     <div *ngFor="let request of messageRequests" class="request-item">
-      <div
-        *ngIf="
-          request.status === 'pending' ||
-          request.status === null ||
-          request.status === undefined
-        "
-        class="request-content"
-      >
+      <div *ngIf="request.status === 'pending' || request.status == null" class="request-content">
         <div class="request-info">
           <span class="request-username">{{ request.senderName }}</span>
           <span class="last-message">{{ request.lastMessage }}</span>
         </div>
         <div class="request-actions">
-          <button
-            class="accept-button"
-            (click)="respondMessageRequest(request.senderId, 'accepted')"
-          >
-            Accept
-          </button>
-          <button
-            class="decline-button"
-            (click)="respondMessageRequest(request.senderId, 'rejected')"
-          >
-            Decline
-          </button>
+          <button class="accept-button" (click)="respondMessageRequest(request.senderId, 'accepted')">Accept</button>
+          <button class="decline-button" (click)="respondMessageRequest(request.senderId, 'rejected')">Decline</button>
         </div>
       </div>
     </div>
@@ -36,41 +19,16 @@
     <h2>Users</h2>
     <div *ngFor="let user of users" class="user-item">
       <div class="user-info">
-        <div>
+        <div class="chat-design">
           <img src="../../assets/self.jpg" class="avatar" />
-          <div
-            class="status"
-            [ngClass]="{ online: user.isOnline, offline: !user.isOnline }"
-          ></div>
+          <div class="status" [ngClass]="{ online: user.isOnline, offline: !user.isOnline }"></div>
           <span class="username">{{ user.username }}</span>
+          <span class="message-content">{{ user.last_message }}</span>
+          <span class="unread-count">{{ user.unread_count }}</span>
         </div>
-
         <div class="user-actions">
-          <button
-            *ngIf="user.status === 'pending' || user.status === null"
-            (click)="sendMessageRequest(user)"
-            class="send-request-button"
-          >
-            Send Request
-          </button>
-          <button
-            *ngIf="user.status === 'accepted'"
-            (click)="startChat(user)"
-            class="chat-button"
-          >
-            Chat
-          </button>
-        </div>
-      </div>
-      <div class="user-meta">
-        <div class="chat-messages">
-          <div class="message-container">
-            <div class="message">
-              <span class="message-content">{{ user.last_message }}</span>
-            </div>
-
-            <span class="unread-count">Unread: {{ user.unread_count }}</span>
-          </div>
+          <button *ngIf="user.status === 'pending' || user.status == null" (click)="sendMessageRequest(user)" class="send-request-button">Send Request</button>
+          <button *ngIf="user.status === 'accepted'" (click)="startChat(user)" class="chat-button">Chat</button>
         </div>
       </div>
     </div>
