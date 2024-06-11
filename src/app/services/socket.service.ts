@@ -46,16 +46,16 @@ export class SocketService {
     this.emit('register-user-id', userId);
   }
 
+  updateUserStatus(): Observable<any> {
+    return this.on<any>('update-user-status');
+  }
+
   joinRoom(senderId: number, receiverId: number): void {
     this.emit('joinRoom', { senderId, receiverId });
   }
 
   sendMessage(message: any): void {
     this.emit('sendMessage', message);
-  }
-
-  getOnlineUsers(): Observable<any> {
-    return this.on<any>('online-users');
   }
 
   receiveMessage(): Observable<any> {
