@@ -9,23 +9,22 @@
   border-radius: 12px;
 }
 
-.message-requests,
-.users-list {
-  margin-bottom: 30px;
-}
-
 h2 {
   font-size: 24px;
   margin-bottom: 15px;
   color: #333;
 }
 
+.message-requests,
+.users-list {
+  margin-bottom: 30px;
+}
+
 .request-item,
 .user-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px;
+  flex-direction: column;
+  padding: 15px 0;
   border-bottom: 1px solid #e0e0e0;
   transition: background-color 0.3s;
 }
@@ -35,6 +34,16 @@ h2 {
   background-color: #fafafa;
 }
 
+.request-info,
+.user-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+
+  position: relative;
+}
+
 .request-username,
 .username {
   font-size: 18px;
@@ -42,10 +51,17 @@ h2 {
   color: #333;
 }
 
+.last-message {
+  font-size: 16px;
+  color: #000000;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
 .request-actions,
-.user-info {
+.user-actions {
   display: flex;
-  align-items: center;
+  justify-content: flex-end;
 }
 
 .status {
@@ -57,15 +73,22 @@ h2 {
 
 .online {
   background-color: #4caf50;
+  position: absolute;
+  top: 28px;
+  left: 30px;
 }
 
 .offline {
   background-color: #f44336;
+  position: absolute;
+  top: 28px;
+  left: 30px;
 }
 
 .send-request-button,
 .accept-button,
-.decline-button {
+.decline-button,
+.chat-button {
   background-color: #007bff;
   color: #ffffff;
   border: none;
@@ -73,18 +96,19 @@ h2 {
   border-radius: 20px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
+  margin-left: 10px;
 }
 
 .send-request-button:hover,
 .accept-button:hover,
-.decline-button:hover {
+.decline-button:hover,
+.chat-button:hover {
   background-color: #0056b3;
   transform: scale(1.05);
 }
 
 .accept-button {
   background-color: #28a745;
-  margin-right: 5px;
 }
 
 .accept-button:hover {
@@ -99,49 +123,56 @@ h2 {
   background-color: #c82333;
 }
 
-.last-message {
-  font-size: 14px;
-  color: #666;
-  margin-left: 10px;
-}
-
-.loading {
-  margin: 20px;
-  font-style: italic;
-  color: #888;
-}
-
-.no-messages {
-  margin: 20px;
-  font-weight: bold;
-  color: #f00;
-}
-
-.message-group {
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-}
-
-.group-header {
+.user-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  font-size: 14px;
+  color: #666;
 }
 
-.group-header h3 {
-  margin: 0;
+.unread-count {
+  font-weight: bold;
+  color: #000;
 }
 
-.time {
-  color: #888;
+.chat-messages {
+  flex-grow: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background: #f9f9f9;
+  max-height: 400px;
 }
 
-.message {
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  padding: 8px;
-  margin-bottom: 8px;
+.message-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 18px;
+}
+
+.message-container.self {
+  flex-direction: row-reverse;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0 10px;
+}
+
+.chat-messages .message {
+  max-width: 70%;
+  padding: 0.75rem 1rem;
+  border-radius: 20px;
+  background: #dcf8c6;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.chat-messages .self .message {
+  background: #dcf8c6;
 }

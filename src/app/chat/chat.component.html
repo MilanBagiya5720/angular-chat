@@ -1,21 +1,30 @@
 <div class="chat-container">
-    <div class="chat-main">
-        <div class="chat-header">
-            <h2>Chat</h2>
-            <button (click)="logout()">Logout</button>
-        </div>
-        <div class="chat-messages" #scrollContainer>
-            <div *ngFor="let message of messages" [class.self]="message.senderId === userId" class="message-container">
-                <img [src]="getUserAvatar(message.senderId)" class="avatar" />
-                <div class="message">
-                    <span class="message-content">{{ message.text }}</span>
-                    <span class="message-time">{{ formatTime(message.timestamp) }}</span>
-                </div>
-            </div>
-        </div>
-        <div class="chat-input">
-            <input [(ngModel)]="message" (keyup.enter)="sendMessage()" placeholder="Type a message..." />
-            <button (click)="sendMessage()">Send</button>
-        </div>
+  <div class="chat-main">
+    <div class="chat-header">
+      <h2>Chat</h2>
+      <button (click)="logout()">Logout</button>
     </div>
+    <div class="chat-messages" #scrollContainer>
+      <div
+        *ngFor="let message of messages"
+        [class.self]="message.senderId === userId"
+        class="message-container"
+      >
+        <img [src]="getUserAvatar(message.senderId)" class="avatar" />
+        <div class="message">
+          <span class="message-content">{{ message.text }}</span>
+          <span class="message-time">{{ formatTime(message.timestamp) }}</span>
+          <button (click)="markAsRead()" *ngIf="message.senderId !== userId">Mark As Read</button>
+        </div>
+      </div>
+    </div>
+    <div class="chat-input">
+      <input
+        [(ngModel)]="message"
+        (keyup.enter)="sendMessage()"
+        placeholder="Type a message..."
+      />
+      <button (click)="sendMessage()">Send</button>
+    </div>
+  </div>
 </div>

@@ -33,6 +33,11 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.getUsersList();
     this.getUserStatus();
     this.getMessageRequest();
+    this.getUnreadMessages();
+  }
+
+  getUnreadMessages(): void {
+  
   }
 
   getUsersList(): void {

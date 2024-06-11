@@ -29,6 +29,19 @@ export class ChatComponent implements OnInit {
     this.registerUser();
     this.getUserMessage();
     this.joinChat();
+    this.getUnreadMessages();
+  }
+
+  markAsRead(): void {
+    this.socketService.markMessagesAsRead(this.userId!, this.receiverId!);
+  }
+
+  getUnreadMessages(): void {
+    this.socketService.messagesRead().subscribe((message) => {
+      if (message.receiverId === this.receiverId && message.isRead === false) {
+        this.markAsRead();
+      }
+    });
   }
 
   registerUser(): void {

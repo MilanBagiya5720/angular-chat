@@ -90,6 +90,10 @@ export class SocketService {
     this.emit('mark-messages-read', { senderId, receiverId });
   }
 
+  messagesRead(): Observable<any> {
+    return this.on<any>('messages-read');
+  }
+
   getUnreadMessagesCount(userId: number, receiverId: number): Observable<any> {
     return this.http.get(
       `${this.apiUrl}/chat/unread-messages/${userId}/${receiverId}`
