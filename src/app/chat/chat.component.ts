@@ -1,9 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ChatService } from '../services/chat.service';
@@ -20,8 +15,6 @@ export class ChatComponent implements OnInit {
   userId: number | null = null;
   receiverId: number | null = null;
 
-  @ViewChild('scrollContainer') private scrollContainer: ElementRef;
-
   constructor(
     private chatService: ChatService,
     private authService: AuthService,
@@ -33,6 +26,12 @@ export class ChatComponent implements OnInit {
     this.userId = this.authService.getUserId();
     this.receiverId = this.authService.getRecieverId();
 
+    this.registerUser();
+    this.getUserMessage();
+    this.joinChat();
+  }
+
+  registerUser(): void {
     if (this.userId && !this.socketService.isConnected()) {
       this.socketService.connect();
       this.socketService.emit('register-user-id', this.userId);
@@ -42,12 +41,12 @@ export class ChatComponent implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
+  }
 
+  getUserMessage(): void {
     this.socketService.receiveMessage().subscribe((message) => {
       this.messages.push(message);
     });
-
-    this.joinChat();
   }
 
   getUserAvatar(userId: number): string {

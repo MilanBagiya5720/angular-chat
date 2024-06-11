@@ -9,14 +9,13 @@ import { environment } from 'src/environments/environment';
 })
 export class SocketService {
   private socket: Socket;
-  private apiUrl = `${environment.localUrl}/api`; // Use template literals for string interpolation
+  private apiUrl = `${environment.localUrl}/api`;
 
   constructor(private http: HttpClient) {
     this.socket = io(environment.localUrl);
   }
 
   // Socket events
-
   emit(event: string, data?: any): void {
     this.socket.emit(event, data);
   }
@@ -59,10 +58,6 @@ export class SocketService {
     return this.on<any>('online-users');
   }
 
-  markMessagesAsRead(senderId: number, receiverId: number): void {
-    this.emit('mark-messages-read', { senderId, receiverId });
-  }
-
   receiveMessage(): Observable<any> {
     return this.on<any>('receiveMessage');
   }
@@ -79,7 +74,21 @@ export class SocketService {
     return this.on<any>('receive-message-request');
   }
 
-  respondMessageRequest(senderId, receiverId, accept) {
+  respondMessageRequest(
+    senderId: number,
+    receiverId: number,
+    accept: boolean
+  ): void {
     this.emit('respond-message-request', { senderId, receiverId, accept });
+  }
+
+  markMessagesAsRead(senderId: number, receiverId: number): void {
+    this.emit('mark-messages-read', { senderId, receiverId });
+  }
+
+  getUnreadMessagesCount(userId: number, receiverId: number): Observable<any> {
+    return this.http.get(
+      `${this.apiUrl}/chat/unread-messages/${userId}/${receiverId}`
+    );
   }
 }

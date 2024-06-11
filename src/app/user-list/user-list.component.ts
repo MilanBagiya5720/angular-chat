@@ -17,6 +17,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   messageRequests: any[] = [];
 
   private onlineUsersSubscription: Subscription;
+  messages;
 
   constructor(
     private userService: UserService,
@@ -32,6 +33,33 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.getUsersList();
     this.getUserStatus();
     this.getMessageRequest();
+    this.loadMessages();
+    this.getUnreadMessagesCountAllUsers(this.userId, 26);
+  }
+
+  loadMessages(): void {
+    this.chatService.getGroupedMessages(this.userId).subscribe(
+      (data) => {
+        this.messages = data;
+      },
+      (error) => {
+        console.error('Error fetching messages', error);
+      }
+    );
+  }
+
+  keys(obj: any): Array<string> {
+    return obj ? Object.keys(obj) : [];
+  }
+
+  getUnreadMessagesCountAllUsers(userId, receiverId): void {
+    this.socketService
+      .getUnreadMessagesCount(userId, receiverId)
+      .subscribe(({ unreadCount }) => {
+        this.users.forEach((user) => {
+          user.unreadMessageCount = unreadCount;
+        });
+      });
   }
 
   getMessageRequest(): void {

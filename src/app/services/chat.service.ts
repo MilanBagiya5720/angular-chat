@@ -41,4 +41,8 @@ export class ChatService {
       accept,
     });
   }
+
+  getGroupedMessages(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/chat/group-messages/${userId}`);
+  }
 }

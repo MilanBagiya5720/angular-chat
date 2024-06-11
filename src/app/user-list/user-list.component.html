@@ -1,27 +1,26 @@
 <div class="container">
   <div class="message-requests">
     <h2>Message Requests</h2>
-    <div *ngFor="let request of messageRequests">
-      <div class="request-item">
-        <span class="request-username"
-          >You have a new message request from:  {{
-            request.senderId
-          }}</span
+    <div *ngFor="let request of messageRequests" class="request-item">
+      <div class="request-info">
+        <span class="request-username">
+          You have a new message request from: {{ request.senderId }}
+        </span>
+        <span class="last-message">{{ request.lastMessage }}</span>
+      </div>
+      <div class="request-actions">
+        <button
+          (click)="respondMessageRequest(request.senderId, true)"
+          class="accept-button"
         >
-        <div class="request-actions">
-          <button
-            (click)="respondMessageRequest(request.senderId, true)"
-            class="accept-button"
-          >
-            Accept
-          </button>
-          <button
-            (click)="respondMessageRequest(request.senderId, false)"
-            class="decline-button"
-          >
-            Decline
-          </button>
-        </div>
+          Accept
+        </button>
+        <button
+          (click)="respondMessageRequest(request.senderId, false)"
+          class="decline-button"
+        >
+          Decline
+        </button>
       </div>
     </div>
   </div>
@@ -37,10 +36,18 @@
         ></span>
       </div>
       <div>
-        <button (click)="sendMessageRequest(user)" class="send-request-button">
+        <button
+          *ngIf="!user.requestAccepted"
+          (click)="sendMessageRequest(user)"
+          class="send-request-button"
+        >
           Send Request
         </button>
-        <button (click)="startChat(user)" class="send-request-button">
+        <button
+          *ngIf="user.requestAccepted"
+          (click)="startChat(user)"
+          class="send-request-button"
+        >
           Chat
         </button>
       </div>
