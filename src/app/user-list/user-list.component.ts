@@ -70,7 +70,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     const message = "Hello, I'd like to chat!";
     this.socketService.sendMessageRequest(this.userId, receiver.id, message);
   }
-  
+
   getMessageRequest(): void {
     this.messageRequestSubscription = this.socketService
       .receiveRequest()
@@ -91,6 +91,14 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.chatService.getMessageRequest(this.userId).subscribe((data: any) => {
       this.messageRequests = data.messagesReq;
     });
+
+    this.socketService.messageRequestResponse().subscribe((data: any) => {
+      const { receiverId, status } = data;
+      const user = this.users.find((u) => u.id === receiverId);
+      if (user) {
+        user.status = status;
+      }
+    });
   }
 
   getUserById(userId: number) {
@@ -104,17 +112,15 @@ export class UserListComponent implements OnInit, OnDestroy {
     });
   }
 
-  respondMessageRequest(senderId: number, accept: boolean): void {
-    this.socketService.respondMessageRequest(senderId, this.userId, accept);
+  respondMessageRequest(senderId: number, status: string): void {
+    this.socketService.respondMessageRequest(senderId, this.userId, status);
     this.messageRequests = this.messageRequests.filter(
       (request) => request.senderId !== senderId
     );
-    if (accept) {
-      this.startChat({ id: senderId });
-    } else {
-      this.messageRequests = this.messageRequests.filter(
-        (request) => request.senderId !== senderId
-      );
+
+    const user = this.users.find((u) => u.id === senderId);
+    if (user) {
+      user.status = status;
     }
   }
 

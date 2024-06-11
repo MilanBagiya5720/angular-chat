@@ -77,9 +77,13 @@ export class SocketService {
   respondMessageRequest(
     senderId: number,
     receiverId: number,
-    accept: boolean
+    status: string
   ): void {
-    this.emit('respond-message-request', { senderId, receiverId, accept });
+    this.emit('respond-message-request', { senderId, receiverId, status });
+  }
+
+  messageRequestResponse(): Observable<any> {
+    return this.on<any>('message-request-response');
   }
 
   markMessagesAsRead(senderId: number, receiverId: number): void {

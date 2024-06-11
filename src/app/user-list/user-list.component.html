@@ -1,26 +1,35 @@
 <div class="container">
   <div class="message-requests">
     <h2>Message Requests</h2>
-    <div *ngFor="let request of messageRequests" class="request-item">
-      <div class="request-info">
-        <span class="request-username">
-          You have a new message request from: {{ request.senderId }}
-        </span>
-        <span class="last-message">{{ request.lastMessage }}</span>
-      </div>
-      <div class="request-actions">
-        <button
-          (click)="respondMessageRequest(request.senderId, true)"
-          class="accept-button"
-        >
-          Accept
-        </button>
-        <button
-          (click)="respondMessageRequest(request.senderId, false)"
-          class="decline-button"
-        >
-          Decline
-        </button>
+    <div *ngFor="let request of messageRequests">
+      <div
+        *ngIf="
+          request.status === 'pending' ||
+          request.status === null ||
+          request.status === undefined
+        "
+        class="request-item"
+      >
+        <div class="request-info">
+          <span class="request-username">
+            {{ request.senderName }}
+          </span>
+          <span class="last-message">{{ request.lastMessage }}</span>
+        </div>
+        <div class="request-actions">
+          <button
+            (click)="respondMessageRequest(request.senderId, 'accepted')"
+            class="accept-button"
+          >
+            Accept
+          </button>
+          <button
+            (click)="respondMessageRequest(request.senderId, 'rejected')"
+            class="decline-button"
+          >
+            Decline
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -37,14 +46,14 @@
       </div>
       <div>
         <button
-          *ngIf="!user.requestAccepted"
+          *ngIf="user.status === 'pending' || user.status === null"
           (click)="sendMessageRequest(user)"
           class="send-request-button"
         >
           Send Request
         </button>
         <button
-          *ngIf="user.requestAccepted"
+          *ngIf="user.status === 'accepted'"
           (click)="startChat(user)"
           class="send-request-button"
         >
