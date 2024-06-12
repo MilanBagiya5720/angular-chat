@@ -38,10 +38,8 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   getUnreadCount(): void {
-    debugger;
     this.socketService.getUnreadMessagesCount(this.userId!).subscribe(
       (response) => {
-        debugger;
         this.totalUnreadMessageCount = response.unreadCount;
       },
       (error) => {
@@ -52,7 +50,6 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     this.socketService.messagesRead().subscribe(
       (data) => {
-        debugger
         this.getUnreadCount();
       },
       (error) => {
