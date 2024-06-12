@@ -65,9 +65,15 @@ export class SocketService {
   sendMessageRequest(
     senderId: number,
     receiverId: number,
-    message: string
+    message: string,
+    senderName: string
   ): void {
-    this.emit('send-message-request', { senderId, receiverId, message });
+    this.emit('send-message-request', {
+      senderId,
+      receiverId,
+      message,
+      senderName,
+    });
   }
 
   receiveRequest(): Observable<any> {

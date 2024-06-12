@@ -12,12 +12,10 @@ import { ChatService } from '../services/chat.service';
   styleUrls: ['./user-list.component.css'],
 })
 export class UserListComponent implements OnInit, OnDestroy {
+  userId: number;
   users: any[] = [];
-  userId: number | null = null;
   messageRequests: any[] = [];
-
-  private onlineUsersSubscription: Subscription = new Subscription();
-  private messageRequestSubscription: Subscription = new Subscription();
+  onlineUsersSubscription: Subscription;
 
   constructor(
     private userService: UserService,
@@ -33,10 +31,6 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.getUsersList();
     this.getUserStatus();
     this.getMessageRequest();
-    this.getUnreadMessages();
-  }
-
-  getUnreadMessages(): void {
   }
 
   getUsersList(): void {
@@ -44,7 +38,7 @@ export class UserListComponent implements OnInit, OnDestroy {
       next: (data: any) => {
         this.users = data.users;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Failed to load users', error);
       },
     });
@@ -53,11 +47,16 @@ export class UserListComponent implements OnInit, OnDestroy {
   getUserStatus(): void {
     this.onlineUsersSubscription = this.socketService
       .updateUserStatus()
-      .subscribe((data: any) => {
-        const user = this.users.find((u) => u.id === data.userId);
-        if (user) {
-          user.isOnline = data.isOnline;
-        }
+      .subscribe({
+        next: (data: any) => {
+          const user = this.users.find((u) => u.id === data.userId);
+          if (user) {
+            user.isOnline = data.isOnline;
+          }
+        },
+        error: (error: any) => {
+          console.error('Failed to update user status', error);
+        },
       });
 
     if (this.userId) {
@@ -65,52 +64,71 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
   }
 
-  startChat(receiverId: any): void {
-    this.authService.setReceiverId(receiverId.id);
+  startChat(receiverId: number): void {
+    this.authService.setReceiverId(receiverId);
     this.router.navigateByUrl('/chat');
   }
 
   sendMessageRequest(receiver: any): void {
     const message = "Hello, I'd like to chat!";
-    this.socketService.sendMessageRequest(this.userId, receiver.id, message);
+    this.socketService.sendMessageRequest(
+      this.userId,
+      receiver.id,
+      message,
+      receiver.senderName
+    );
   }
 
   getMessageRequest(): void {
-    this.messageRequestSubscription = this.socketService
-      .receiveRequest()
-      .subscribe((data: any) => {
-        const { senderId, message } = data;
+    this.socketService.receiveRequest().subscribe({
+      next: (data: any) => {
+        const { senderId, message, senderName } = data;
         const user = this.users.find((u) => u.id === senderId);
         if (user) {
           user.lastMessage = message;
           this.messageRequests.push({
             senderId,
-            senderUsername: user.username,
+            senderName: senderName,
             lastMessage: message,
           });
+          alert(`Message request from ${user.username}: ${message}`);
         }
-        alert(`Message request from ${user.username}: ${message}`);
-      });
-
-    this.chatService.getMessageRequest(this.userId).subscribe((data: any) => {
-      this.messageRequests = data.messagesReq;
+      },
+      error: (error: any) => {
+        console.error('Failed to receive message request', error);
+      },
     });
 
-    this.socketService.messageRequestResponse().subscribe((data: any) => {
-      const { receiverId, status } = data;
-      const user = this.users.find((u) => u.id === receiverId);
-      if (user) {
-        user.status = status;
-      }
+    this.chatService.getMessageRequest(this.userId).subscribe({
+      next: (data: any) => {
+        this.messageRequests = data.messagesReq;
+      },
+      error: (error: any) => {
+        console.error('Failed to load message requests', error);
+      },
+    });
+
+    this.socketService.messageRequestResponse().subscribe({
+      next: (data: any) => {
+        debugger;
+        const { receiverId, status } = data;
+        const user = this.users.find((u) => u.id === receiverId);
+        if (user) {
+          user.status = status;
+        }
+      },
+      error: (error: any) => {
+        console.error('Failed to handle message request response', error);
+      },
     });
   }
 
-  getUserById(userId: number) {
+  getUserById(userId: number): void {
     this.userService.getUserById(userId).subscribe({
       next: (data: any) => {
         return data.username;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Failed to load user', error);
       },
     });
@@ -131,10 +149,6 @@ export class UserListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.onlineUsersSubscription) {
       this.onlineUsersSubscription.unsubscribe();
-    }
-
-    if (this.messageRequestSubscription) {
-      this.messageRequestSubscription.unsubscribe();
     }
     this.socketService.disconnect();
   }
