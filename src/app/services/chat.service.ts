@@ -45,4 +45,8 @@ export class ChatService {
   getGroupedMessages(userId: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/chat/group-messages/${userId}`);
   }
+
+  getUnreadMessagesCount(userId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/chat/unread-messages/${userId}`);
+  }
 }

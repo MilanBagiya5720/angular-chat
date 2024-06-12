@@ -44,7 +44,7 @@
           </div>
           <div
             class="status"
-            [ngClass]="{ 'online-status': user.isOnline, 'offline-status': !user.isOnline }"
+            [ngClass]="{ 'online': user.isOnline, 'offline': !user.isOnline }"
           ></div>
           <div class="user-meta">
             <span class="username">{{ user.username }}</span>

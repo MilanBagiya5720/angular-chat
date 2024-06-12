@@ -31,14 +31,12 @@ export class ChatComponent implements OnInit {
     this.registerUser();
     this.getUserMessage();
     this.joinChat();
+
+    this.markAsRead();
   }
 
-  markAsRead(message: any): void {
-    this.socketService.markMessagesAsRead(
-      this.userId!,
-      this.receiverId!,
-      message.messageId
-    );
+  markAsRead(): void {
+    this.socketService.markMessagesAsRead(this.userId!, this.receiverId!);
   }
 
   registerUser(): void {
@@ -59,14 +57,6 @@ export class ChatComponent implements OnInit {
     });
   }
 
-  getUserAvatar(userId: number): string {
-    if (userId === this.userId) {
-      return '/assets/self.jpg';
-    } else {
-      return `/assets/avtar.jpg`;
-    }
-  }
-
   joinChat(): void {
     if (this.receiverId !== null) {
       this.socketService.joinRoom(this.userId!, this.receiverId);
@@ -75,6 +65,14 @@ export class ChatComponent implements OnInit {
         .subscribe((messages) => {
           this.messages = messages;
         });
+    }
+  }
+
+  getUserAvatar(userId: number): string {
+    if (userId === this.userId) {
+      return '/assets/self.jpg';
+    } else {
+      return `/assets/avtar.jpg`;
     }
   }
 

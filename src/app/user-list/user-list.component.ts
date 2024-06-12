@@ -31,14 +31,55 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.initializeData();
+    this.setupSocketListeners();
+  }
+
+  private initializeData(): void {
     this.getUsersList();
     this.getUserStatus();
     this.getMessageRequest();
     this.getUnreadCount();
   }
 
-  getUnreadCount(): void {
-    this.socketService.getUnreadMessagesCount(this.userId!).subscribe(
+  private setupSocketListeners(): void {
+    this.socketService.getUpdateMessagesCount().subscribe(
+      () => {
+        this.getUnreadCount();
+        this.updateLastMessages();
+        this.getUsersList();
+      },
+      (error) => {
+        this.handleError('Failed to get update messages count', error);
+      }
+    );
+  }
+
+  private updateLastMessages(): void {
+    this.chatService.getLastMessage(this.userId).subscribe(
+      (response) => {
+        if (response && response.length > 0) {
+          this.users.forEach((user) => {
+            const lastMessage = response.find((msg) => msg.senderId === user.id);
+            if (lastMessage) {
+              user.last_message = lastMessage.text;
+            }
+          });
+        }
+      },
+      (error) => {
+        this.handleError('Failed to get last message', error);
+      }
+    );
+  }
+
+  private handleError(message: string, error: any): void {
+    this.toast.error(message, '');
+    console.error(message, error);
+  }
+
+  private getUnreadCount(): void {
+    this.chatService.getUnreadMessagesCount(this.userId!).subscribe(
       (response) => {
         this.totalUnreadMessageCount = response.unreadCount;
       },
@@ -59,7 +100,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     );
   }
 
-  getUsersList(): void {
+  private getUsersList(): void {
     this.userService.getAllUsers(this.userId).subscribe({
       next: (data: any) => {
         this.users = data.users;
@@ -70,7 +111,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     });
   }
 
-  getUserStatus(): void {
+  private getUserStatus(): void {
     this.onlineUsersSubscription = this.socketService
       .updateUserStatus()
       .subscribe({
@@ -90,12 +131,12 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
   }
 
-  startChat(receiverId: number): void {
+  public startChat(receiverId: number): void {
     this.authService.setReceiverId(receiverId);
     this.router.navigateByUrl('/chat');
   }
 
-  sendMessageRequest(receiver: any): void {
+  public sendMessageRequest(receiver: any): void {
     const message = "Hello, I'd like to chat!";
     this.socketService.sendMessageRequest(
       this.userId,
@@ -105,7 +146,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     );
   }
 
-  getMessageRequest(): void {
+  private getMessageRequest(): void {
     this.socketService.receiveRequest().subscribe(
       (data: any) => {
         const { senderId, message, senderName } = data;
@@ -151,7 +192,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     );
   }
 
-  getUserById(userId: number): void {
+  private getUserById(userId: number): void {
     this.userService.getUserById(userId).subscribe({
       next: (data: any) => {
         return data.username;
@@ -163,7 +204,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     });
   }
 
-  respondMessageRequest(senderId: number, status: string): void {
+  public respondMessageRequest(senderId: number, status: string): void {
     this.socketService.respondMessageRequest(senderId, this.userId, status);
     this.messageRequests = this.messageRequests.filter(
       (request) => request.senderId !== senderId

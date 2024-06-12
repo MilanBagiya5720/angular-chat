@@ -92,19 +92,15 @@ export class SocketService {
     return this.on<any>('message-request-response');
   }
 
-  markMessagesAsRead(
-    senderId: number,
-    receiverId: number,
-    messageId: number
-  ): void {
-    this.emit('mark-messages-read', { senderId, receiverId, messageId });
+  markMessagesAsRead(senderId: number, receiverId: number): void {
+    this.emit('mark-messages-read', { senderId, receiverId });
   }
 
   messagesRead(): Observable<any> {
     return this.on<any>('messages-read');
   }
 
-  getUnreadMessagesCount(userId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/chat/unread-messages/${userId}`);
+  getUpdateMessagesCount(): Observable<any> {
+    return this.on<any>('update-messages-count');
   }
 }
