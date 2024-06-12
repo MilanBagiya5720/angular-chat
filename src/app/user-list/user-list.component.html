@@ -7,7 +7,7 @@
         class="request-content"
       >
         <div class="request-info">
-          <span class="request-username">{{ request | json }}</span>
+          <span class="request-username">{{ request.senderName }}</span>
           <span class="last-message">{{ request.lastMessage }}</span>
         </div>
         <div class="request-actions">
