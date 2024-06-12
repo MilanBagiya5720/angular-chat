@@ -29,26 +29,38 @@
   </div>
 
   <div class="users-list">
-    <h2>Users</h2>
+    <div class="wrapper-user">
+      <h2>Users</h2>
+      <span>New Message: {{ totalUnreadMessageCount }}</span>
+    </div>
     <div *ngFor="let user of users" class="user-item">
       <div class="user-info">
         <div class="chat-design">
-          <img src="../../assets/self.jpg" class="avatar" alt="User Avatar" />
-          <div
-            class="status"
-            [ngClass]="{ online: user.isOnline, offline: !user.isOnline }"
-          ></div>
-          <div class="user-meta">
-            <span class="username">{{ user.username }}</span>
-            <span class="last-message">{{ user.last_message }}</span>
+          <div class="avtar-wrapper">
+            <img src="../../assets/self.jpg" class="avatar" alt="User Avatar" />
             <span class="unread-count" *ngIf="user.unread_count">{{
               user.unread_count
             }}</span>
           </div>
+          <div
+            class="status"
+            [ngClass]="{ 'online-status': user.isOnline, 'offline-status': !user.isOnline }"
+          ></div>
+          <div class="user-meta">
+            <span class="username">{{ user.username }}</span>
+            <span class="last-message" *ngIf="user.last_message">
+              <span>New Message: </span>
+              <span> {{ user.last_message }}</span>
+            </span>
+          </div>
         </div>
         <div class="user-actions">
           <button
-            *ngIf="user.status === 'pending' || user.status == null || user.status === 'rejected'"
+            *ngIf="
+              user.status === 'pending' ||
+              user.status == null ||
+              user.status === 'rejected'
+            "
             (click)="sendMessageRequest(user)"
             class="send-request-button"
           >

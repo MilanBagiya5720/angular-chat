@@ -14,6 +14,8 @@ export class ChatComponent implements OnInit {
   messages: any[] = [];
   userId: number | null = null;
   receiverId: number | null = null;
+  conversationId: number | null = null;
+  unreadCount: number | null = null;
 
   constructor(
     private chatService: ChatService,
@@ -29,19 +31,14 @@ export class ChatComponent implements OnInit {
     this.registerUser();
     this.getUserMessage();
     this.joinChat();
-    this.getUnreadMessages();
   }
 
-  markAsRead(): void {
-    this.socketService.markMessagesAsRead(this.userId!, this.receiverId!);
-  }
-
-  getUnreadMessages(): void {
-    this.socketService.messagesRead().subscribe((message) => {
-      if (message.receiverId === this.receiverId && message.isSeen === false) {
-        this.markAsRead();
-      }
-    });
+  markAsRead(message: any): void {
+    this.socketService.markMessagesAsRead(
+      this.userId!,
+      this.receiverId!,
+      message.messageId
+    );
   }
 
   registerUser(): void {

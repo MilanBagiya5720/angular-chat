@@ -14,7 +14,7 @@
         <div class="message">
           <span class="message-content">{{ message.text }}</span>
           <span class="message-time">{{ formatTime(message.messageCreatedAt) }}</span>
-          <button (click)="markAsRead()" *ngIf="message.senderId !== userId">Mark As Read</button>
+          <button (click)="markAsRead(message)" *ngIf="message.senderId !== userId">Mark As Read</button>
         </div>
       </div>
     </div>

@@ -8,13 +8,23 @@ import { SocketService } from './socket.service';
 export class AuthService {
   constructor(private router: Router, private socketSvc: SocketService) {}
 
+  setUserDetails(user): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  }
+
+  getUserDetails(): any {
+    return localStorage.getItem('currentUser')
+      ? JSON.parse(localStorage.getItem('currentUser'))
+      : null;
+  }
+
   setUserId(userId: number): void {
-    localStorage.setItem('currentUser', JSON.stringify(userId));
+    localStorage.setItem('userId', JSON.stringify(userId));
   }
 
   getUserId(): number | null {
-    return localStorage.getItem('currentUser')
-      ? +localStorage.getItem('currentUser')
+    return localStorage.getItem('userId')
+      ? +localStorage.getItem('userId')
       : null;
   }
 
@@ -27,12 +37,6 @@ export class AuthService {
       ? +localStorage.getItem('receiver')
       : null;
   }
-
-  // getOnlineUsers(): Observable<any> {
-  //   return new Observable<any>((observer) => {
-  //     this.socket.on('online-users', (users) => observer.next(users));
-  //   });
-  // }
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('token');

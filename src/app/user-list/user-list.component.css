@@ -124,9 +124,23 @@ h2 {
   color: #666;
 }
 
+.avtar-wrapper {
+  position: relative;
+}
+
 .unread-count {
-  font-weight: bold;
-  color: #000;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: #218838;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 22px;
+  top: -6px;
+  color: #fff;
+  font-size: 12px;
 }
 
 .avatar {

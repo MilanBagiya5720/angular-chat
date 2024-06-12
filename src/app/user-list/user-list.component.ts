@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { SocketService } from 'src/app/services/socket.service';
 import { UserService } from 'src/app/services/user.service';
 import { ChatService } from '../services/chat.service';
+import { ToasterService } from '../services/toaster.service';
 
 @Component({
   selector: 'app-user-list',
@@ -16,13 +17,15 @@ export class UserListComponent implements OnInit, OnDestroy {
   users: any[] = [];
   messageRequests: any[] = [];
   onlineUsersSubscription: Subscription;
+  totalUnreadMessageCount: number | null = null;
 
   constructor(
     private userService: UserService,
     private authService: AuthService,
     private socketService: SocketService,
     private chatService: ChatService,
-    private router: Router
+    private router: Router,
+    private toast: ToasterService
   ) {
     this.userId = this.authService.getUserId();
   }
@@ -31,6 +34,32 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.getUsersList();
     this.getUserStatus();
     this.getMessageRequest();
+    this.getUnreadCount();
+  }
+
+  getUnreadCount(): void {
+    debugger;
+    this.socketService.getUnreadMessagesCount(this.userId!).subscribe(
+      (response) => {
+        debugger;
+        this.totalUnreadMessageCount = response.unreadCount;
+      },
+      (error) => {
+        this.toast.error('Failed to get unread messages count', '');
+        console.error('Failed to get unread messages count', error);
+      }
+    );
+
+    this.socketService.messagesRead().subscribe(
+      (data) => {
+        debugger
+        this.getUnreadCount();
+      },
+      (error) => {
+        this.toast.error('Failed to get messages read', '');
+        console.error('Failed to get messages read', error);
+      }
+    );
   }
 
   getUsersList(): void {
@@ -80,47 +109,49 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   getMessageRequest(): void {
-    this.socketService.receiveRequest().subscribe({
-      next: (data: any) => {
+    this.socketService.receiveRequest().subscribe(
+      (data: any) => {
         const { senderId, message, senderName } = data;
         const user = this.users.find((u) => u.id === senderId);
         if (user) {
           user.lastMessage = message;
           this.messageRequests.push({
             senderId,
-            senderName: senderName,
+            senderName,
             lastMessage: message,
           });
-          alert(`Message request from ${user.username}: ${message}`);
+
+          this.toast.success(`Message request from ${user.username}`, message);
         }
       },
-      error: (error: any) => {
+      (error) => {
+        this.toast.error('Failed to receive message request', '');
         console.error('Failed to receive message request', error);
-      },
-    });
+      }
+    );
 
-    this.chatService.getMessageRequest(this.userId).subscribe({
-      next: (data: any) => {
+    this.chatService.getMessageRequest(this.userId).subscribe(
+      (data: any) => {
         this.messageRequests = data.messagesReq;
       },
-      error: (error: any) => {
+      (error) => {
+        this.toast.error('Failed to load message requests', '');
         console.error('Failed to load message requests', error);
-      },
-    });
+      }
+    );
 
-    this.socketService.messageRequestResponse().subscribe({
-      next: (data: any) => {
-        debugger;
+    this.socketService.messageRequestResponse().subscribe(
+      (data: any) => {
         const { receiverId, status } = data;
         const user = this.users.find((u) => u.id === receiverId);
         if (user) {
           user.status = status;
         }
       },
-      error: (error: any) => {
+      (error) => {
         console.error('Failed to handle message request response', error);
-      },
-    });
+      }
+    );
   }
 
   getUserById(userId: number): void {
@@ -129,6 +160,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         return data.username;
       },
       error: (error: any) => {
+        this.toast.error('Failed to load user', '');
         console.error('Failed to load user', error);
       },
     });
