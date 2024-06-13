@@ -1,17 +1,21 @@
-<nav>
+<nav class="navbar">
   <div class="chat-design" *ngIf="isLoggedIn()">
-    <div class="avtart-wrapper">
+    <div class="avatar-wrapper">
       <img src="../../assets/self.jpg" class="avatar" alt="User Avatar" />
-      <span style="padding-left: 8px; font-size: 12px; color: white;">{{ userName }}</span>
+      <span class="username">{{ userName }}</span>
     </div>
   </div>
-  <a routerLink="/login" routerLinkActive="active">Login</a>
-  <a routerLink="/register" routerLinkActive="active">Register</a>
-  <a routerLink="/chat" routerLinkActive="active" *ngIf="isLoggedIn()">Chat</a>
-  <a routerLink="/users" routerLinkActive="active" *ngIf="isLoggedIn()"
-    >Users</a
-  >
-
-  <a (click)="logout()" *ngIf="isLoggedIn()">Logout</a>
+  <div class="nav-links">
+    <a routerLink="/login" routerLinkActive="active">Login</a>
+    <a routerLink="/register" routerLinkActive="active">Register</a>
+    <a routerLink="/chat" routerLinkActive="active" *ngIf="isLoggedIn()"
+      >Chat</a
+    >
+    <a routerLink="/users" routerLinkActive="active" *ngIf="isLoggedIn()"
+      >Users</a
+    >
+    <a (click)="logout()" *ngIf="isLoggedIn()">Logout</a>
+  </div>
 </nav>
+
 <router-outlet></router-outlet>

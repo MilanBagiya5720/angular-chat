@@ -1,158 +1,174 @@
-.container {
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
   display: flex;
-  flex-direction: column;
-  max-width: 900px;
-  margin: 20px auto;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  max-width: 800px;
+  margin: 50px auto;
   padding: 20px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
-  font-size: 24px;
-  margin-bottom: 15px;
-  color: #333;
+  margin-bottom: 20px;
+  color: #4a4a4a;
+  text-align: center;
 }
 
 .message-requests,
 .users-list {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .request-item,
 .user-item {
   display: flex;
   flex-direction: column;
-  padding: 15px;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
   border-bottom: 1px solid #e0e0e0;
-  transition: background-color 0.3s;
-  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
-    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
-  background: white;
-  border-radius: 8px;
-  margin: 10px 0;
 }
 
-.request-item:hover,
-.user-item:hover {
-  background-color: #fafafa;
-}
-
-.request-info,
+.request-content,
 .user-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+}
+
+.request-info,
+.user-meta {
+  display: flex;
+  flex-direction: column;
 }
 
 .request-username,
 .username {
-  font-size: 18px;
   font-weight: bold;
   color: #333;
 }
 
 .last-message {
-  font-size: 16px;
-  color: #555;
+  font-weight: bolder;
+  font-size: 14px;
+  color: rgb(53, 53, 53);
+  padding: 0 10px;
 }
 
 .request-actions,
 .user-actions {
   display: flex;
-  justify-content: flex-end;
+  gap: 10px;
 }
 
-.status {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.online {
-  background-color: #4caf50;
-}
-
-.offline {
-  background-color: #f44336;
-}
-
-.send-request-button,
 .accept-button,
 .decline-button,
+.send-request-button,
 .chat-button {
-  background-color: #007bff;
-  color: #ffffff;
+  padding: 8px 12px;
   border: none;
-  padding: 8px 15px;
-  border-radius: 20px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-  margin-left: 10px;
-}
-
-.send-request-button:hover,
-.accept-button:hover,
-.decline-button:hover,
-.chat-button:hover {
-  background-color: #0056b3;
-  transform: scale(1.05);
+  font-size: 14px;
+  transition: background 0.3s;
 }
 
 .accept-button {
-  background-color: #28a745;
+  background: #4caf50;
+  color: white;
 }
 
 .accept-button:hover {
-  background-color: #218838;
+  background: #45a049;
 }
 
 .decline-button {
-  background-color: #dc3545;
+  background: #f44336;
+  color: white;
 }
 
 .decline-button:hover {
-  background-color: #c82333;
+  background: #e53935;
 }
 
-.user-meta {
+.send-request-button {
+  background: #6e8efb;
+  color: white;
+}
+
+.send-request-button:hover {
+  background: #5a78d8;
+}
+
+.chat-button {
+  background: #009688;
+  color: white;
+}
+
+.chat-button:hover {
+  background: #00796b;
+}
+
+.avatar-wrapper {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
-  font-size: 14px;
-  color: #666;
-}
-
-.avtar-wrapper {
-  position: relative;
-}
-
-.unread-count {
-  position: absolute;
-  width: 15px;
-  height: 15px;
-  background: #218838;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
   align-items: center;
-  left: 22px;
-  top: -6px;
-  color: #fff;
-  font-size: 12px;
+
+  position: relative;
 }
 
 .avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
-    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+  margin-right: 10px;
 }
 
-.chat-design {
+.unread-count {
+  background: #ff5722;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-size: 12px;
+  margin-left: -10px;
+
+  position: absolute;
+  top: 0;
+  left: 36px;
+}
+
+.status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 10px;
+}
+
+.online {
+  background: #4caf50;
+}
+
+.offline {
+  background: #f44336;
+}
+
+.wrapper-user {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 22px;
+  margin-bottom: 20px;
+}
+
+.user-meta {
+  margin-left: 10px;
 }

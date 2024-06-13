@@ -60,7 +60,9 @@ export class UserListComponent implements OnInit, OnDestroy {
       (response) => {
         if (response && response.length > 0) {
           this.users.forEach((user) => {
-            const lastMessage = response.find((msg) => msg.senderId === user.id);
+            const lastMessage = response.find(
+              (msg) => msg.senderId === user.id
+            );
             if (lastMessage) {
               user.last_message = lastMessage.text;
             }
@@ -114,20 +116,20 @@ export class UserListComponent implements OnInit, OnDestroy {
   private getUserStatus(): void {
     this.onlineUsersSubscription = this.socketService
       .updateUserStatus()
-      .subscribe({
-        next: (data: any) => {
-          const user = this.users.find((u) => u.id === data.userId);
-          if (user) {
-            user.isOnline = data.isOnline;
-          }
-        },
-        error: (error: any) => {
-          console.error('Failed to update user status', error);
-        },
-      });
+      .subscribe(
+        (data: any) => this.updateUserStatus(data),
+        (error: any) => this.handleError('Failed to update user status', error)
+      );
 
     if (this.userId) {
       this.socketService.registerUserId(this.userId);
+    }
+  }
+
+  private updateUserStatus(data: any): void {
+    const user = this.users.find((u) => u.id === data.userId);
+    if (user) {
+      user.isOnline = data.isOnline;
     }
   }
 
@@ -148,8 +150,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   private getMessageRequest(): void {
     this.socketService.receiveRequest().subscribe(
-      (data: any) => {
-        const { senderId, message, senderName } = data;
+      ({ senderId, message, senderName }: any) => {
         const user = this.users.find((u) => u.id === senderId);
         if (user) {
           user.lastMessage = message;
@@ -169,8 +170,8 @@ export class UserListComponent implements OnInit, OnDestroy {
     );
 
     this.chatService.getMessageRequest(this.userId).subscribe(
-      (data: any) => {
-        this.messageRequests = data.messagesReq;
+      ({ messagesReq }: any) => {
+        this.messageRequests = messagesReq;
       },
       (error) => {
         this.toast.error('Failed to load message requests', '');
@@ -179,8 +180,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     );
 
     this.socketService.messageRequestResponse().subscribe(
-      (data: any) => {
-        const { receiverId, status } = data;
+      ({ receiverId, status }: any) => {
         const user = this.users.find((u) => u.id === receiverId);
         if (user) {
           user.status = status;
@@ -190,18 +190,6 @@ export class UserListComponent implements OnInit, OnDestroy {
         console.error('Failed to handle message request response', error);
       }
     );
-  }
-
-  private getUserById(userId: number): void {
-    this.userService.getUserById(userId).subscribe({
-      next: (data: any) => {
-        return data.username;
-      },
-      error: (error: any) => {
-        this.toast.error('Failed to load user', '');
-        console.error('Failed to load user', error);
-      },
-    });
   }
 
   public respondMessageRequest(senderId: number, status: string): void {
