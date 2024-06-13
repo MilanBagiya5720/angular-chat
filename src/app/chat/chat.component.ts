@@ -91,6 +91,7 @@ export class ChatComponent implements OnInit {
         receiver: 'receiver',
         type: 'text',
         videoThumbnail: 'videoThumbnail',
+        messageCreatedAt: new Date(),
       };
       this.socketService.sendMessage(message);
       this.message = '';
