@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
-  username: string = '';
+  name: string = '';
   password: string = '';
   errorMessage: string = '';
   successMessage: string = '';
@@ -21,7 +21,7 @@ export class RegisterComponent {
   onSubmit(): void {
     this.http
       .post<any>(environment.localUrl + '/api/users/register', {
-        username: this.username,
+        name: this.name,
         password: this.password,
       })
       .subscribe(

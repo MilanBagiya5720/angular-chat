@@ -43,9 +43,9 @@
             }}</span>
             <div
               class="status"
-              [ngClass]="{ online: user.isOnline, offline: !user.isOnline }"
+              [ngClass]="{ online: user.is_online, offline: !user.is_online }"
             ></div>
-            <span class="username">{{ user.username }}</span>
+            <span class="username">{{ user.name }}</span>
             <div class="user-meta">
               <span class="last-message" *ngIf="user.last_message">
                 <span>{{ user.last_message }}</span>

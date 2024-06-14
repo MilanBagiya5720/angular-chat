@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-  username: string = '';
+  name: string = '';
   password: string = '';
   errorMessage: string = '';
 
@@ -25,7 +25,7 @@ export class LoginComponent {
   onSubmit(): void {
     this.http
       .post<any>(environment.localUrl + '/api/users/login', {
-        username: this.username,
+        name: this.name,
         password: this.password,
       })
       .subscribe(
@@ -36,7 +36,7 @@ export class LoginComponent {
             this.authService.setUserId(response.user.id);
             this.router.navigate(['/users']);
           } else {
-            this.errorMessage = 'Invalid username or password';
+            this.errorMessage = 'Invalid name or password';
           }
         },
         (error) => {

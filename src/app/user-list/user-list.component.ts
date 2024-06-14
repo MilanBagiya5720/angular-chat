@@ -129,7 +129,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   private updateUserStatus(data: any): void {
     const user = this.users.find((u) => u.id === data.userId);
     if (user) {
-      user.isOnline = data.isOnline;
+      user.is_online = data.is_online;
     }
   }
 
@@ -160,7 +160,7 @@ export class UserListComponent implements OnInit, OnDestroy {
             lastMessage: message,
           });
 
-          this.toast.success(`Message request from ${user.username}`, message);
+          this.toast.success(`Message request from ${user.name}`, message);
         }
       },
       (error) => {
