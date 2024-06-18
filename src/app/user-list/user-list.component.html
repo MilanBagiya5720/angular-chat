@@ -3,7 +3,7 @@
     <h2>Message Requests</h2>
     <div *ngFor="let request of messageRequests" class="request-item">
       <div
-        *ngIf="request.status === 'pending' || request.status == null"
+        *ngIf="request.status === 'pending' || request.status == null || request.status == ''"
         class="request-content"
       >
         <div class="request-info">
@@ -58,6 +58,7 @@
             *ngIf="
               user.status === 'pending' ||
               user.status == null ||
+              user.status == '' ||
               user.status === 'rejected'
             "
             (click)="sendMessageRequest(user)"
