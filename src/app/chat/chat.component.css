@@ -91,3 +91,17 @@
   justify-content: flex-start;
   margin-bottom: 10px;
 }
+
+
+.time-group {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.sent {
+  text-align: right;
+}
+
+.received {
+  text-align: left;
+}

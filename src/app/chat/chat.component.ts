@@ -17,6 +17,8 @@ export class ChatComponent implements OnInit {
   conversationId: number | null = null;
   unreadCount: number | null = null;
 
+  groupedMessages: any[] = [];
+
   constructor(
     private chatService: ChatService,
     private authService: AuthService,
@@ -31,7 +33,6 @@ export class ChatComponent implements OnInit {
     this.registerUser();
     this.getUserMessage();
     this.joinChat();
-
     this.markAsRead();
   }
 
@@ -53,7 +54,15 @@ export class ChatComponent implements OnInit {
 
   getUserMessage(): void {
     this.socketService.receiveMessage().subscribe((message) => {
-      this.messages.push(message);
+      const lastMessage = this.groupedMessages.length ? this.groupedMessages[this.groupedMessages.length - 1] : null;
+      if (lastMessage && lastMessage.timeGroup === message.timeGroup) {
+        lastMessage.messages.push(message);
+      } else {
+        this.groupedMessages.push({
+          timeGroup: message.timeGroup,
+          messages: [message]
+        });
+      }
     });
   }
 
@@ -63,7 +72,7 @@ export class ChatComponent implements OnInit {
       this.chatService
         .getMessages(this.userId!, this.receiverId)
         .subscribe((messages) => {
-          this.messages = messages;
+          this.groupedMessages = messages;
         });
     }
   }

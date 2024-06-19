@@ -4,8 +4,15 @@
     <button class="logout-btn" (click)="logout()">Logout</button>
   </div>
   <div class="chat-messages" #scrollContainer>
+
+    <div *ngFor="let group of groupedMessages">
+      <div class="time-group">
+        <h3>{{ group.timeGroup | date:'short' }}</h3>
+      </div>
+
+
     <div
-      *ngFor="let message of messages"
+      *ngFor="let message of group.messages"
       [ngClass]="{
         'message-container-right': message.senderId === userId,
         'message-container-left': message.senderId !== userId
@@ -27,12 +34,7 @@
     </div>
   </div>
   <div class="chat-input">
-    <input
-      [(ngModel)]="message"
-      (keyup.enter)="sendMessage()"
-      placeholder="Type a message..."
-      class="message-input"
-    />
+    <input [(ngModel)]="message" (keyup.enter)="sendMessage()" placeholder="Type a message..." class="message-input" />
     <button class="send-btn" (click)="sendMessage()">Send</button>
   </div>
 </div>
