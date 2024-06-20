@@ -96,6 +96,29 @@ export class SocketService {
     this.emit('mark-messages-read', { senderId, receiverId });
   }
 
+  clearChat(senderId: number, receiverId: number): void {
+    this.emit('clear-messages', {
+      senderId,
+      receiverId,
+    });
+  }
+
+  deleteMessage(senderId, receiverId, messageId): void {
+    this.emit('delete-message', {
+      senderId,
+      receiverId,
+      messageId,
+    });
+  }
+
+  listenClearChat(): Observable<any> {
+    return this.on<any>('listen-chat-clear');
+  }
+
+  listenDeleteMessage(): Observable<any> {
+    return this.on<any>('listen-delete-message');
+  }
+
   messagesRead(): Observable<any> {
     return this.on<any>('messages-read');
   }

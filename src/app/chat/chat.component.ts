@@ -14,8 +14,6 @@ export class ChatComponent implements OnInit {
   messages: any[] = [];
   userId: number | null = null;
   receiverId: number | null = null;
-  conversationId: number | null = null;
-  unreadCount: number | null = null;
 
   groupedMessages: any[] = [];
 
@@ -28,12 +26,14 @@ export class ChatComponent implements OnInit {
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId();
-    this.receiverId = this.authService.getRecieverId();
+    this.receiverId = this.authService.getReceiverId();
 
     this.registerUser();
     this.getUserMessage();
     this.joinChat();
     this.markAsRead();
+    this.listenClearChat();
+    this.listenDeleteMessage();
   }
 
   markAsRead(): void {
@@ -48,19 +48,20 @@ export class ChatComponent implements OnInit {
 
     if (this.userId === null) {
       this.router.navigate(['/login']);
-      return;
     }
   }
 
   getUserMessage(): void {
     this.socketService.receiveMessage().subscribe((message) => {
-      const lastMessage = this.groupedMessages.length ? this.groupedMessages[this.groupedMessages.length - 1] : null;
+      const lastMessage = this.groupedMessages.length
+        ? this.groupedMessages[this.groupedMessages.length - 1]
+        : null;
       if (lastMessage && lastMessage.timeGroup === message.timeGroup) {
         lastMessage.messages.push(message);
       } else {
         this.groupedMessages.push({
           timeGroup: message.timeGroup,
-          messages: [message]
+          messages: [message],
         });
       }
     });
@@ -95,7 +96,6 @@ export class ChatComponent implements OnInit {
         senderId: this.userId,
         receiverId: this.receiverId,
         text: this.message,
-        isSeen: false,
         sender: 'self',
         receiver: 'receiver',
         type: 'text',
@@ -105,6 +105,31 @@ export class ChatComponent implements OnInit {
       this.socketService.sendMessage(message);
       this.message = '';
     }
+  }
+
+  clearChat(): void {
+    this.socketService.clearChat(this.userId, this.receiverId);
+  }
+
+  deleteMessage(messageId: number): void {
+    this.socketService.deleteMessage(this.userId, this.receiverId, messageId);
+  }
+
+  listenClearChat(): void {
+    this.socketService.listenClearChat().subscribe(() => {
+      this.groupedMessages = [];
+    });
+  }
+
+  listenDeleteMessage(): void {
+    this.socketService.listenDeleteMessage().subscribe((messageId) => {
+      this.groupedMessages = this.groupedMessages.map((group) => ({
+        ...group,
+        messages: group.messages.filter(
+          (message) => message.messageId !== messageId
+        ),
+      }));
+    });
   }
 
   logout(): void {

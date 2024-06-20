@@ -7,10 +7,8 @@
 
     <div *ngFor="let group of groupedMessages">
       <div class="time-group">
-        <h3>{{ group.timeGroup | date:'short' }}</h3>
+        <h3>{{ group.timeGroup }}</h3>
       </div>
-
-
     <div
       *ngFor="let message of group.messages"
       [ngClass]="{
@@ -31,10 +29,12 @@
           formatTime(message.messageCreatedAt)
         }}</span>
       </div>
+      <button class="send-btn" (click)="deleteMessage(message.messageId)">X</button>
     </div>
   </div>
   <div class="chat-input">
     <input [(ngModel)]="message" (keyup.enter)="sendMessage()" placeholder="Type a message..." class="message-input" />
     <button class="send-btn" (click)="sendMessage()">Send</button>
+    <button class="send-btn" (click)="clearChat()">Clear Chat</button>
   </div>
 </div>
