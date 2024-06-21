@@ -38,7 +38,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   private initializeData(): void {
     this.getUsersList();
     this.getUserStatus();
-    this.getMessageRequest();
+    // this.getMessageRequest();
     this.getUnreadCount();
   }
 
@@ -133,76 +133,59 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
   }
 
-  public startChat(receiverId: number): void {
-    this.authService.setReceiverId(receiverId);
+  public sendMessageRequest(receiver: any): void {
+    this.socketService.sendMessageRequest(this.userId, receiver.id);
+  }
+
+  public startChat(user: any): void {
+    this.authService.setReceiverId(user.id);
+    this.authService.setReceiver(user);
     this.router.navigateByUrl('/chat');
   }
 
-  public sendMessageRequest(receiver: any): void {
-    const message = "Hello, I'd like to chat!";
-    this.socketService.sendMessageRequest(
-      this.userId,
-      receiver.id,
-      message,
-      receiver.senderName
-    );
-  }
+  // private getMessageRequest(): void {
+  //   this.socketService.receiveRequest().subscribe(
+  //     ({ senderId, message, senderName }: any) => {
+  //       const user = this.users.find((u) => u.id === senderId);
+  //       if (user) {
+  //         user.lastMessage = message;
+  //         this.messageRequests.push({
+  //           senderId,
+  //           senderName,
+  //           lastMessage: message,
+  //         });
 
-  private getMessageRequest(): void {
-    this.socketService.receiveRequest().subscribe(
-      ({ senderId, message, senderName }: any) => {
-        const user = this.users.find((u) => u.id === senderId);
-        if (user) {
-          user.lastMessage = message;
-          this.messageRequests.push({
-            senderId,
-            senderName,
-            lastMessage: message,
-          });
+  //         this.toast.success(`Message request from ${user.name}`, message);
+  //       }
+  //     },
+  //     (error) => {
+  //       this.toast.error('Failed to receive message request', '');
+  //       console.error('Failed to receive message request', error);
+  //     }
+  //   );
 
-          this.toast.success(`Message request from ${user.name}`, message);
-        }
-      },
-      (error) => {
-        this.toast.error('Failed to receive message request', '');
-        console.error('Failed to receive message request', error);
-      }
-    );
+  //   this.chatService.getMessageRequest(this.userId).subscribe(
+  //     ({ messagesReq }: any) => {
+  //       this.messageRequests = messagesReq;
+  //     },
+  //     (error) => {
+  //       this.toast.error('Failed to load message requests', '');
+  //       console.error('Failed to load message requests', error);
+  //     }
+  //   );
 
-    this.chatService.getMessageRequest(this.userId).subscribe(
-      ({ messagesReq }: any) => {
-        this.messageRequests = messagesReq;
-      },
-      (error) => {
-        this.toast.error('Failed to load message requests', '');
-        console.error('Failed to load message requests', error);
-      }
-    );
-
-    this.socketService.messageRequestResponse().subscribe(
-      ({ receiverId, status }: any) => {
-        const user = this.users.find((u) => u.id === receiverId);
-        if (user) {
-          user.status = status;
-        }
-      },
-      (error) => {
-        console.error('Failed to handle message request response', error);
-      }
-    );
-  }
-
-  public respondMessageRequest(senderId: number, status: string): void {
-    this.socketService.respondMessageRequest(senderId, this.userId, status);
-    this.messageRequests = this.messageRequests.filter(
-      (request) => request.senderId !== senderId
-    );
-
-    const user = this.users.find((u) => u.id === senderId);
-    if (user) {
-      user.status = status;
-    }
-  }
+  //   this.socketService.messageRequestResponse().subscribe(
+  //     ({ receiverId, status }: any) => {
+  //       const user = this.users.find((u) => u.id === receiverId);
+  //       if (user) {
+  //         user.status = status;
+  //       }
+  //     },
+  //     (error) => {
+  //       console.error('Failed to handle message request response', error);
+  //     }
+  //   );
+  // }
 
   ngOnDestroy(): void {
     if (this.onlineUsersSubscription) {

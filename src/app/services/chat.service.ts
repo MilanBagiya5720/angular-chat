@@ -49,4 +49,10 @@ export class ChatService {
   getUnreadMessagesCount(userId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/chat/unread-messages/${userId}`);
   }
+
+  getUserStatus(userId: number, receiverId: number): Observable<any> {
+    return this.http.get(
+      `${this.apiUrl}/users/user-status?senderId=${userId}&receiverId=${receiverId}`
+    );
+  }
 }

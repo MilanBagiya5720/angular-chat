@@ -32,6 +32,16 @@ export class AuthService {
     localStorage.setItem('receiver', JSON.stringify(receiverId));
   }
 
+  setReceiver(receiver: any): void {
+    localStorage.setItem('receiverUser', JSON.stringify(receiver));
+  }
+
+  getReceiver(): any {
+    return localStorage.getItem('receiverUser')
+      ? JSON.parse(localStorage.getItem('receiverUser'))
+      : null;
+  }
+
   getReceiverId(): number | null {
     return localStorage.getItem('receiver')
       ? +localStorage.getItem('receiver')

@@ -92,7 +92,6 @@
   margin-bottom: 10px;
 }
 
-
 .time-group {
   text-align: center;
   margin: 10px 0;
@@ -104,4 +103,29 @@
 
 .received {
   text-align: left;
+}
+
+.message-request-buttons {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.accept-btn {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.reject-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
 }

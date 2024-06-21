@@ -11,9 +11,9 @@ import { SocketService } from '../services/socket.service';
 })
 export class ChatComponent implements OnInit {
   message = '';
-  messages: any[] = [];
   userId: number | null = null;
   receiverId: number | null = null;
+  receiver: any;
 
   groupedMessages: any[] = [];
 
@@ -27,6 +27,7 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {
     this.userId = this.authService.getUserId();
     this.receiverId = this.authService.getReceiverId();
+    this.receiver = this.authService.getReceiver();
 
     this.registerUser();
     this.getUserMessage();
@@ -34,6 +35,16 @@ export class ChatComponent implements OnInit {
     this.markAsRead();
     this.listenClearChat();
     this.listenDeleteMessage();
+    this.getMessageRequest();
+
+    this.getUserStatus();
+  }
+
+  getUserStatus(): void {
+    this.chatService
+      .getUserStatus(this.userId, this.receiverId)
+      .subscribe((status) => {
+      });
   }
 
   markAsRead(): void {
@@ -98,6 +109,7 @@ export class ChatComponent implements OnInit {
         text: this.message,
         sender: 'self',
         receiver: 'receiver',
+        isSeen: 0,
         type: 'text',
         videoThumbnail: 'videoThumbnail',
         messageCreatedAt: new Date(),
@@ -105,6 +117,14 @@ export class ChatComponent implements OnInit {
       this.socketService.sendMessage(message);
       this.message = '';
     }
+
+    if (this.receiver.status === 'not sent') {
+      this.sendMessageRequest();
+    }
+  }
+
+  public sendMessageRequest(): void {
+    this.socketService.sendMessageRequest(this.userId, this.receiverId);
   }
 
   clearChat(): void {
@@ -139,5 +159,49 @@ export class ChatComponent implements OnInit {
   formatTime(timestamp?: string): string {
     const date = timestamp ? new Date(timestamp) : new Date();
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  respondMessageRequest(status: string): void {
+    this.socketService.respondMessageRequest(
+      this.receiverId,
+      this.userId,
+      status
+    );
+  }
+
+  private getMessageRequest(): void {
+    this.socketService.receiveRequest().subscribe(
+      ({ senderId, message, senderName }: any) => {
+        debugger;
+        // const user = this.users.find((u) => u.id === senderId);
+        // if (user) {
+        //   user.lastMessage = message;
+        //   this.messageRequests.push({
+        //     senderId,
+        //     senderName,
+        //     lastMessage: message,
+        //   });
+
+        //   this.toast.success(`Message request from ${user.name}`, message);
+        // }
+      },
+      (error) => {
+        // this.toast.error('Failed to receive message request', '');
+        console.error('Failed to receive message request', error);
+      }
+    );
+
+    this.socketService.messageRequestResponse().subscribe(
+      ({ receiverId, status }: any) => {
+        debugger;
+        // // const user = this.users.find((u) => u.id === receiverId);
+        // if (user) {
+        //   user.status = status;
+        // }
+      },
+      (error) => {
+        console.error('Failed to handle message request response', error);
+      }
+    );
   }
 }

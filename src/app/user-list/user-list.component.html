@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="message-requests" *ngIf="messageRequests.length > 0">
+  <!-- <div class="message-requests" *ngIf="messageRequests.length > 0">
     <h2>Message Requests</h2>
     <div *ngFor="let request of messageRequests" class="request-item">
       <div *ngIf="request.status === 'pending' || request.status == null || request.status == ''"
@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <div class="users-list">
     <div class="wrapper-user">
@@ -45,13 +45,12 @@
         <div class="user-actions">
           <button *ngIf="
               user.status === 'pending' ||
-              user.status == null ||
-              user.status == '' ||
+              user.status == 'not sent' ||
               user.status === 'rejected'
             " (click)="sendMessageRequest(user)" class="send-request-button">
             Send Request
           </button>
-          <button *ngIf="user.status === 'accepted'" (click)="startChat(user.id)" class="chat-button">
+          <button (click)="startChat(user)" class="chat-button">
             Chat
           </button>
         </div>

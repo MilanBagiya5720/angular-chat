@@ -62,17 +62,10 @@ export class SocketService {
     return this.on<any>('receiveMessage');
   }
 
-  sendMessageRequest(
-    senderId: number,
-    receiverId: number,
-    message: string,
-    senderName: string
-  ): void {
+  sendMessageRequest(senderId: number, receiverId: number): void {
     this.emit('send-message-request', {
       senderId,
       receiverId,
-      message,
-      senderName,
     });
   }
 

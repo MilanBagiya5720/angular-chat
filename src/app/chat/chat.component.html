@@ -4,37 +4,32 @@
     <button class="logout-btn" (click)="logout()">Logout</button>
   </div>
   <div class="chat-messages" #scrollContainer>
-
     <div *ngFor="let group of groupedMessages">
       <div class="time-group">
         <h3>{{ group.timeGroup }}</h3>
       </div>
-    <div
-      *ngFor="let message of group.messages"
-      [ngClass]="{
+      <div *ngFor="let message of group.messages" [ngClass]="{
         'message-container-right': message.senderId === userId,
         'message-container-left': message.senderId !== userId
-      }"
-    >
-      <img [src]="getUserAvatar(message.senderId)" class="avatar" />
-      <div
-        class="message"
-        [ngClass]="{
+      }">
+        <img [src]="getUserAvatar(message.senderId)" class="avatar" />
+        <div class="message" [ngClass]="{
           'message-right': message.senderId === userId,
           'message-left': message.senderId !== userId
-        }"
-      >
-        <span class="message-content">{{ message.text }}</span>
-        <span class="message-time">{{
-          formatTime(message.messageCreatedAt)
-        }}</span>
+        }">
+          <span class="message-content">{{ message.text }}</span>
+          <span class="message-time">{{ formatTime(message.messageCreatedAt) }}</span>
+        </div>
       </div>
-      <button class="send-btn" (click)="deleteMessage(message.messageId)">X</button>
     </div>
-  </div>
-  <div class="chat-input">
-    <input [(ngModel)]="message" (keyup.enter)="sendMessage()" placeholder="Type a message..." class="message-input" />
-    <button class="send-btn" (click)="sendMessage()">Send</button>
-    <button class="send-btn" (click)="clearChat()">Clear Chat</button>
+    <div class="message-request-buttons" *ngIf="receiver?.status === 'pending'">
+      <button class="accept-btn" (click)="respondMessageRequest('accepted')">Accept</button>
+      <button class="reject-btn" (click)="respondMessageRequest('rejected')">Reject</button>
+    </div>
+    <div class="chat-input" *ngIf="receiver?.status === 'accepted' || receiver?.status === 'not sent' || receiver?.status === 'request sent'">
+      <input [(ngModel)]="message" (keyup.enter)="sendMessage()" placeholder="Type a message..."
+        class="message-input" />
+      <button class="send-btn" (click)="sendMessage()">Send</button>
+    </div>
   </div>
 </div>
