@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ChatService } from '../services/chat.service';
@@ -14,6 +14,7 @@ export class ChatComponent implements OnInit {
   userId: number | null = null;
   receiverId: number | null = null;
   receiver: any;
+  isTyping: boolean = false;
 
   groupedMessages: any[] = [];
 
@@ -36,15 +37,33 @@ export class ChatComponent implements OnInit {
     this.listenClearChat();
     this.listenDeleteMessage();
     this.getMessageRequest();
-
-    this.getUserStatus();
+    this.getTypingStatus();
   }
 
-  getUserStatus(): void {
-    this.chatService
-      .getUserStatus(this.userId, this.receiverId)
-      .subscribe((status) => {
-      });
+  getTypingStatus(): void {
+    this.socketService.getTypingStatus().subscribe((status) => {
+      if (status.receiverId === this.userId) {
+        this.isTyping = status.isTyping;
+      }
+    });
+  }
+
+  @HostListener('document:keypress', ['$event'])
+  @HostListener('document:input', ['$event'])
+  @HostListener('document:focusout', ['$event'])
+  onTyping(event?: KeyboardEvent | Event): void {
+    if (event instanceof KeyboardEvent && event.key !== 'Enter') {
+      return;
+    }
+    if (!this.receiver || this.receiver?.status !== 'accepted') {
+      return;
+    }
+    this.isTyping = event ? true : false;
+    this.socketService.setTypingStatus(
+      this.userId!,
+      this.receiverId!,
+      this.isTyping
+    );
   }
 
   markAsRead(): void {

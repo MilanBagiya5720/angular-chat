@@ -38,7 +38,6 @@ export class UserListComponent implements OnInit, OnDestroy {
   private initializeData(): void {
     this.getUsersList();
     this.getUserStatus();
-    // this.getMessageRequest();
     this.getUnreadCount();
   }
 

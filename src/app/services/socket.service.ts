@@ -119,4 +119,20 @@ export class SocketService {
   getUpdateMessagesCount(): Observable<any> {
     return this.on<any>('update-messages-count');
   }
+
+  setTypingStatus(
+    senderId: number,
+    receiverId: number,
+    isTyping: boolean
+  ): void {
+    this.emit('typing', {
+      receiverId,
+      senderId,
+      isTyping,
+    });
+  }
+
+  getTypingStatus(): Observable<any> {
+    return this.on<any>('is-typing');
+  }
 }

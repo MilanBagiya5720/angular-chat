@@ -26,9 +26,12 @@
       <button class="accept-btn" (click)="respondMessageRequest('accepted')">Accept</button>
       <button class="reject-btn" (click)="respondMessageRequest('rejected')">Reject</button>
     </div>
-    <div class="chat-input" *ngIf="receiver?.status === 'accepted' || receiver?.status === 'not sent' || receiver?.status === 'request sent'">
-      <input [(ngModel)]="message" (keyup.enter)="sendMessage()" placeholder="Type a message..."
+    <div class="chat-input"
+      *ngIf="receiver?.status === 'accepted'">
+      <input [(ngModel)]="message" (keydown.enter)="sendMessage()" (input)="onTyping()" placeholder="Type a message..."
         class="message-input" />
+
+      <span class="typing-message" *ngIf="isTyping">Typing...</span>
       <button class="send-btn" (click)="sendMessage()">Send</button>
     </div>
   </div>

@@ -12,7 +12,7 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   getAllUsers(userId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}?userId=${userId}`);
+    return this.http.get<any[]>(`${this.apiUrl}/${userId}`);
   }
 
   getUserById(id: number): Observable<any> {
